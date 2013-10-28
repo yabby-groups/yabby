@@ -1,0 +1,12 @@
+{
+    "name": "tweet"
+  , "version": "0.0.1"
+  , "private": true
+  , "dependencies": {
+      "express": "*"
+    , "jade": "*"
+    , "async": "*"
+    , "mongoose": "*"
+    , "connect-mongo": "*"
+  }
+}
