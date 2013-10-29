@@ -10,7 +10,7 @@ User = new Schema
 
 Passwd = new Schema
   user_id: {type: Schema.ObjectId, index: {unique: true}}
-  email: {type: String, index: {unique: True}}
+  email: {type: String, index: {unique: true}}
   passwd: String
 
 OauthToken = new Schema
