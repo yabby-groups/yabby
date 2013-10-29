@@ -38,5 +38,12 @@ class Yabby
       return callback err if err
       self.get_user result.user_id, callback
 
+  get_user: (user_id, callback) ->
+    User.findById user_id, (err, user) ->
+      return callback 'User not found' unless user
+      user = user.toJSON()
+      user.avatar = JSON.parse(user.avatar) if user.avatar
+      callback null, user
+
 
 module.exports = Yabby
