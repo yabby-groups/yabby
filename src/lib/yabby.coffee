@@ -52,5 +52,26 @@ class Yabby
     tweet = new Tweet tweet
     tweet.save callback
 
+  get_tweet: (tweet_id, callback) ->
+    self = @
+    Tweet.findById tweet_id, (err, tweet) ->
+      return callback 'tweet is not exists' unless tweet
+      async.parallel {
+        user: (next) ->
+          return next null unless tweet.user_id
+          self.get_user tweet.user_id, (err, user) ->
+            next null, user
+        file: (next) ->
+          return next null unless tweet.file_id
+          User.findById tweet.file_id, (err, file) ->
+            file = file.toJSON() if file
+            next null, file
+
+      }, (err, results) ->
+        tweet = tweet.toJSON()
+        tweet.user = results.user
+        tweet.file = results.file
+
+        callback null, tweet
 
 module.exports = Yabby
