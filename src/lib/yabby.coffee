@@ -3,7 +3,8 @@ mongoose = require 'mongoose'
 async = require 'async'
 
 class Yabby
-    constructor: (@config) ->
-        mongoose.connect @config.mongod
+  constructor: (@config) ->
+    mongoose.connect @config.mongod
+
 
 module.exports = Yabby
