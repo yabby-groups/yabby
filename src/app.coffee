@@ -24,7 +24,7 @@ app.use express.bodyParser()
 app.use express.methodOverride()
 app.use express.cookieParser()
 app.use express.session {
-  secret: 'maskdfnlaf',
+  secret: config.cookie_secret,
   store: new MongoStore({url: config.mongod})
 }
 app.use app.router
