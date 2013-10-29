@@ -45,5 +45,12 @@ class Yabby
       user.avatar = JSON.parse(user.avatar) if user.avatar
       callback null, user
 
+  create_tweet: (tweet, callback) ->
+    if not tweet.text or tweet.text.length > 150
+      return callback 'Invalid text'
+
+    tweet = new Tweet tweet
+    tweet.save callback
+
 
 module.exports = Yabby
