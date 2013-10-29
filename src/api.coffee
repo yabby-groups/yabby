@@ -7,5 +7,5 @@ module.exports = (app, yabby) ->
         else
             res.json(data)
 
-    app.get "#{api_prefix}/users/me/", (req, res) ->
+    app.get "#{api_prefix}/users/me", (req, res) ->
         send_json_response res, null, req.user
