@@ -110,4 +110,18 @@ class Yabby
           tweet.user = results.users[tweet.user_id]
           return tweet
         callback null, tweets
+
+  create_comment: (comment, callback) ->
+    comment = new Comment comment
+    comment.save (err, comment) ->
+      return callback 'comment fail' if err
+      async.parallel [
+        (next) ->
+          Tweet.findOneAndUpdate {tweet_id: comment.tweet_id}, {$inc: {comment_count: 1}}, (err, tweet) ->
+            next null
+        (next) ->
+          User.findOneAndUpdate {user_id: comment.user_id}, {$inc: {comment_count: 1}}, (err, user) ->
+            next null
+      ], (err) ->
+        callback null
 module.exports = Yabby
