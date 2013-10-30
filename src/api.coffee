@@ -14,3 +14,9 @@ module.exports = (app, yabby) ->
     user = req.body
     yabby.create_user user, (err) ->
       send_json_response res, err, {}
+
+  app.post "#{api_prefix}/tweets/", (req, res) ->
+    tweet = req.body
+    tweet.user_id = req.user.user_id
+    yabby.create_tweet tweet, (err, data) ->
+      send_json_response res, err, data
