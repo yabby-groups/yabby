@@ -77,4 +77,37 @@ class Yabby
 
         callback null, tweet
 
+  get_tweets: (query, options, callback) ->
+    Tweet.find query, null, options, (err, tweets) ->
+      return callback 'there if not tweets' if err
+      return callback null, null unless tweets
+      async.parallel {
+        users: (next) ->
+          user_ids = tweets.map (tweet) ->
+            return tweet.user_id
+
+          User.find {user_id: user_ids}, (err, users) ->
+            ret = {}
+            users.forEach users, (user) ->
+              user = user.toJSON()
+              user.avatar = JSON.parse(user.avatar) if user.avatar
+              ret[user_id] = user
+            next null, ret
+        files: (next) ->
+          file_ids = tweets.map (tweet) ->
+            return tweet.file_id
+          file_ids = file_ids.filter (file_id) ->
+            return file_id
+          File.find file_id: file_ids, (err, files) ->
+            ret = {}
+            files.forEach (file) ->
+              ret[file.file_id] = file.toJSON()
+            next null, ret
+      }, (err, results) ->
+        tweets = tweets.map (tweet) ->
+          tweet = tweet.toJSON()
+          tweet.file = results.files[tweet.file_id] if tweet.file_id
+          tweet.user = results.users[tweet.user_id]
+          return tweet
+        callback null, tweets
 module.exports = Yabby
