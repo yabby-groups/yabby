@@ -9,3 +9,8 @@ module.exports = (app, yabby) ->
 
   app.get "#{api_prefix}/users/me", (req, res) ->
     send_json_response res, null, req.user
+
+  app.post "#{api_prefix}/users/register", (req, res) ->
+    user = req.body
+    yabby.create_user user, (err) ->
+      send_json_response res, err, {}
