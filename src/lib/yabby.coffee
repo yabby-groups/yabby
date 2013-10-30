@@ -124,4 +124,24 @@ class Yabby
             next null
       ], (err) ->
         callback null
+
+  get_comments: (query, options, callback) ->
+    Comment.find query, null, options, (err, comments) ->
+      return callback 'not comments' if err or not comments
+      user_ids = comments.map (comment) ->
+        return comment.user_id
+
+      User.find {user_id: user_ids}, (err, users) ->
+        _users = {}
+        users.forEach (user) ->
+          user = user.toJSON()
+          user.avatar = JSON.parse(user.avatar) if user.avatar
+          _users[user.user_id] = user
+
+        comments = comments.map (comment) ->
+          comment = comment.toJSON()
+          comment.user = _users[comment.user_id]
+
+        callback null, comments
+
 module.exports = Yabby
