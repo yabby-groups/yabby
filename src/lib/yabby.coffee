@@ -66,7 +66,7 @@ class Yabby
             next null, user
         file: (next) ->
           return next null unless tweet.file_id
-          User.findById tweet.file_id, (err, file) ->
+          User.findOne file_id: tweet.file_id, (err, file) ->
             file = file.toJSON() if file
             next null, file
 
