@@ -20,3 +20,8 @@ module.exports = (app, yabby) ->
     tweet.user_id = req.user.user_id
     yabby.create_tweet tweet, (err, data) ->
       send_json_response res, err, data
+
+  app.get "#{api_prefix}/tweets/:tweet_id", (req, res) ->
+    tweet_id = req.params.tweet_id
+    yabby.get_tweet tweet_id, (err, data) ->
+      send_json_response res, err, data
