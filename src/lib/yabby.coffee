@@ -29,7 +29,7 @@ class Yabby
         shasum.update user.passwd
         hash = shasum.digest 'hex'
         pwd = new Passwd {
-          user_id: u.id
+          user_id: u.user_id
           email: user.email
           passwd: hash
         }
@@ -39,7 +39,7 @@ class Yabby
       self.get_user result.user_id, callback
 
   get_user: (user_id, callback) ->
-    User.findById user_id, (err, user) ->
+    User.findOne user_id: user_id, (err, user) ->
       return callback 'User not found' unless user
       user = user.toJSON()
       user.avatar = JSON.parse(user.avatar) if user.avatar
