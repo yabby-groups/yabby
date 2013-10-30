@@ -35,8 +35,7 @@ class Yabby
         }
         pwd.save next
     ], (err, result) ->
-      return callback err if err
-      self.get_user result.user_id, callback
+      callback err
 
   get_user: (user_id, callback) ->
     User.findOne user_id: user_id, (err, user) ->
