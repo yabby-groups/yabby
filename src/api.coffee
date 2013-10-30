@@ -36,3 +36,15 @@ module.exports = (app, yabby) ->
     yabby.get_tweets null, {skip: skip, limit: limit, sort: {tweet_id: -1}}, (err, data) ->
       data = data or {}
       send_json_response res, err, data
+
+  app.get "#{api_prefix}/users/:user_id/tweets", (req, res) ->
+    user_id = req.params.user_id
+    page = req.query.page
+    page = if page then parseInt(page) else 0
+    limit = req.query.limit
+    limit = if limit then parseInt(limit) else 10
+    limit = 50 if limit > 50
+    skip = page * limit
+    yabby.get_tweets {user_id: user_id}, {skip: skip, limit: limit, sort: {tweet_id: -1}}, (err, data) ->
+      data = data or {}
+      send_json_response res, err, data
