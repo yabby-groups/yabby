@@ -1,5 +1,5 @@
 mongoose = require 'mongoose'
-{User, Passwd, OauthToken, Tweet, Comment, File, Like, CommentLike, Favorite} = require './model'
+{User, Passwd, OauthToken, Tweet, Comment, File, Like, CommentLike, Favorite} = require './models'
 async = require 'async'
 crypto = require 'crypto'
 
