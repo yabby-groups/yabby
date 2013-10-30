@@ -1,5 +1,7 @@
 mongoose = require 'mongoose'
 Schema = mongoose.Schema
+autoIncrement = require 'mongoose-auto-increment'
+autoIncrement.initialize mongoose.connection
 
 User = new Schema
   username: {type: String, index: {unique: true}}
@@ -8,38 +10,46 @@ User = new Schema
   comment_count: {type: Number, default: 0}
   created_at: {type: Date, default: Date.now}
 
+User.plugin autoIncrement.plugin, {model: 'User', field: 'user_id'}
+
 Passwd = new Schema
-  user_id: {type: Schema.ObjectId, index: {unique: true}}
+  user_id: {type: Number, index: {unique: true}}
   email: {type: String, index: {unique: true}}
   passwd: String
 
 OauthToken = new Schema
-  user_id: Schema.ObjectId
+  user_id: Number
   access_token: {type: String, index: {unique: true}}
   refresh_token: {type: String, index: {unique: true}}
   created_at: {type: Date, default: Date.now}
   expires_in: {type: Number, default: 3600 * 24 * 7}
 
 Tweet = new Schema
-  user_id: Schema.ObjectId
+  user_id: Number
   text: String
-  file_id: Schema.ObjectId
+  file_id: Number
   comment_count: {type: Number, default: 0}
   like_count: {type: Number, default: 0}
   unlike_count: {type: Number, default: 0}
   created_at: {type: Date, default: Date.now}
 
+Tweet.plugin autoIncrement.plugin, {model: 'Tweet', field: 'tweet_id'}
+
 Comment = new Schema
-  tweet_id: {type: Schema.ObjectId, index: true}
-  user_id: Schema.ObjectId
+  tweet_id: {type: Number, index: true}
+  user_id: Number
   text: String
   like_count: {type: Number, default: 0}
   created_at: {type: Date, default: Date.now}
+
+Comment.plugin autoIncrement.plugin, {model: 'Comment', field: 'comment_id'}
 
 File = new Schema
   file_key: {type: String, index: {unique: true}}
   file_bucket: String
   extra: String
+
+File.plugin autoIncrement.plugin, {model: 'File', field: 'file_id'}
 
 Like = new Schema
   user_id: Schema.ObjectId
