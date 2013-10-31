@@ -67,3 +67,10 @@ module.exports = (app, yabby) ->
     comment.user_id = req.user.user_id
     yabby.create_comment comment, (err) ->
       send_json_response res, err, {}
+
+  app.post "#{api_prefix}/tweets/:tweet_id/comments/:comment_id/like", (req, res) ->
+    tweet_id = req.params.tweet_id
+    comment_id = req.params.comment_id
+    like = {user_id:req.user.user_id, comment_id: comment_id}
+    yabby.comment_like like, (err) ->
+      send_json_response res, err, {}
