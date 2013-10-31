@@ -76,6 +76,9 @@ class Yabby
 
         callback null, tweet
 
+  del_tweet: (tweet, callback) ->
+    Tweet.findOneAndRemove tweet, callback
+
   get_tweets: (query, options, callback) ->
     Tweet.find query, null, options, (err, tweets) ->
       return callback 'there if not tweets' if err
