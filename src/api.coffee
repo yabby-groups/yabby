@@ -48,3 +48,14 @@ module.exports = (app, yabby) ->
     yabby.get_tweets {user_id: user_id}, {skip: skip, limit: limit, sort: {tweet_id: -1}}, (err, data) ->
       data = data or {}
       send_json_response res, err, data
+
+  app.get "#{api_prefix}/tweets/:tweet_id/comments", (req, res) ->
+    tweet_id = req.params.tweet_id
+    page = req.query.page
+    page = if page then Number(page) else 0
+    limit = req.query.limit
+    limit = if limit then Number(limit) else 10
+    limit = 50 if limit > 50
+    skip = page * limit
+    yabby.get_comments tweet_id: tweet_id, {skip: skip, limit: limit, sort: {tweet_id: -1}}, (err, data) ->
+      send_json_response res, err, data
