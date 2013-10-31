@@ -177,4 +177,18 @@ class Yabby
             Tweet.findOneAndUpdate {tweet_id: like.tweet_id}, {$inc: {unlike_count: 1}}, (err, tweet) ->
               callback null
 
+  comment_like: (like, callback) ->
+    CommentLike.findOne {user_id: like.user_id, comment_id: like.comment_id}, (err, _like) ->
+      if _like
+        _like.delete (err) ->
+          return callback 'your cant unlike the comment' if err
+          Comment.findOneAndUpdate {tweet_id: like.comment_id}, {$inc: {like_count: -1}}, (err, comment) ->
+            callback null
+      else
+        _like = new CommentLike like
+        _like.save (err, _like) ->
+          return callback 'your cant like the comment' if err
+          Comment.findOneAndUpdate {tweet_id: like.comment_id}, {$inc: {like_count: 1}}, (err, comment) ->
+            callback null
+
 module.exports = Yabby
