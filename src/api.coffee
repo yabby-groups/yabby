@@ -59,3 +59,11 @@ module.exports = (app, yabby) ->
     skip = page * limit
     yabby.get_comments tweet_id: tweet_id, {skip: skip, limit: limit, sort: {tweet_id: -1}}, (err, data) ->
       send_json_response res, err, data
+
+  app.post "#{api_prefix}/tweets/:tweet_id/comments", (req, res) ->
+    tweet_id = req.params.tweet_id
+    comment = req.body
+    comment.tweet_id = tweet_id
+    comment.user_id = req.user.user_id
+    yabby.create_comment comment, (err) ->
+      send_json_response res, err, {}
