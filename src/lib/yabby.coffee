@@ -56,7 +56,7 @@ class Yabby
 
   get_tweet: (tweet_id, callback) ->
     self = @
-    Tweet.findById tweet_id, (err, tweet) ->
+    Tweet.findOne tweet_id: tweet_id, (err, tweet) ->
       return callback 'tweet is not exists' unless tweet
       async.parallel {
         user: (next) ->
