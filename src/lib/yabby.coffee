@@ -146,4 +146,7 @@ class Yabby
 
         callback null, comments
 
+  del_comment: (comment, callback) ->
+    Comment.findOneAndRemove comment, callback
+
 module.exports = Yabby
