@@ -149,4 +149,32 @@ class Yabby
   del_comment: (comment, callback) ->
     Comment.findOneAndRemove comment, callback
 
+  like: (like, callback) ->
+    Like.findOne {user_id: like.user_id, tweet_id: like.tweet_id}, (err, _like) ->
+      if _like
+        if _like.is_like is like.is_like
+          callback 'you are already like or unlike it'
+        else
+          if _like.is_like and not like.is_like
+            _like.delete (err) ->
+              return callback 'you cant like it' if err
+              Tweet.findOneAndUpdate {tweet_id: like.tweet_id}, {$inc: {like_count: -1}}, (err, tweet) ->
+                callback null
+          else
+            _like.delete (err) ->
+              return callback 'you cant unlike it' if err
+              Tweet.findOneAndUpdate {tweet_id: like.tweet_id}, {$inc: {unlike_count: -1}}, (err, tweet) ->
+                callback null
+            _like.delete callback
+      else
+        _like = new Like like
+        _like.save (err, _like) ->
+          return callback 'you are already like or unlike it' if err
+          if _like.is_like
+            Tweet.findOneAndUpdate {tweet_id: like.tweet_id}, {$inc: {like_count: 1}}, (err, tweet) ->
+              callback null
+          else
+            Tweet.findOneAndUpdate {tweet_id: like.tweet_id}, {$inc: {unlike_count: 1}}, (err, tweet) ->
+              callback null
+
 module.exports = Yabby
