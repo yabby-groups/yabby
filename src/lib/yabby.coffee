@@ -220,4 +220,10 @@ class Yabby
               req.session.user = user
               res.json user
 
+  require_login: () ->
+    self = @
+    return (req, res, next) ->
+      return next() if req.user
+      res.json {err: 401, msg: 'Unauthorized'}
+
 module.exports = Yabby
