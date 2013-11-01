@@ -29,6 +29,7 @@ app.use express.session {
   store: new MongoStore({url: config.mongod})
 }
 app.use app.router
+app.use yabby.auth
 app.use express.static(path.join(__dirname, 'public'))
 
 # development only
