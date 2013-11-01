@@ -239,4 +239,12 @@ class Yabby
       _fav.save (err, _fav) ->
         callback err
 
+  get_favorites: (query, options, callback) ->
+    self = @
+    Favorite.find query, null, options, (err, favs) ->
+      tweet_ids = favs.map (fav) ->
+        return fav.tweet_id
+
+      self.get_tweets {tweet_id: tweet_ids}, callback
+
 module.exports = Yabby
