@@ -1,13 +1,16 @@
 api_prefix = require("./config").api_prefix
 
 module.exports = (app, yabby) ->
+  require_login = yabby.require_login
+  require_admin = yabby.require_admin
+
   send_json_response = (res, err, data) ->
     if err
       res.json {err: 401, msg: err}
     else
       res.json data
 
-  app.get "#{api_prefix}/users/me", (req, res) ->
+  app.get "#{api_prefix}/users/me", require_login(), (req, res) ->
     send_json_response res, null, req.user
 
   app.post "#{api_prefix}/users/register", (req, res) ->
@@ -15,7 +18,7 @@ module.exports = (app, yabby) ->
     yabby.create_user user, (err) ->
       send_json_response res, err, {}
 
-  app.post "#{api_prefix}/tweets/", (req, res) ->
+  app.post "#{api_prefix}/tweets/", require_login(), (req, res) ->
     tweet = req.body
     tweet.user_id = req.user.user_id
     yabby.create_tweet tweet, (err, data) ->
@@ -60,7 +63,7 @@ module.exports = (app, yabby) ->
     yabby.get_comments tweet_id: tweet_id, {skip: skip, limit: limit, sort: {tweet_id: -1}}, (err, data) ->
       send_json_response res, err, data
 
-  app.post "#{api_prefix}/tweets/:tweet_id/comments", (req, res) ->
+  app.post "#{api_prefix}/tweets/:tweet_id/comments", require_login(), (req, res) ->
     tweet_id = req.params.tweet_id
     comment = req.body
     comment.tweet_id = tweet_id
@@ -68,20 +71,20 @@ module.exports = (app, yabby) ->
     yabby.create_comment comment, (err) ->
       send_json_response res, err, {}
 
-  app.post "#{api_prefix}/tweets/:tweet_id/comments/:comment_id/like", (req, res) ->
+  app.post "#{api_prefix}/tweets/:tweet_id/comments/:comment_id/like", require_login(), (req, res) ->
     tweet_id = req.params.tweet_id
     comment_id = req.params.comment_id
     like = {user_id:req.user.user_id, comment_id: comment_id}
     yabby.comment_like like, (err) ->
       send_json_response res, err, {}
 
-  app.post "#{api_prefix}/tweets/:tweet_id/like", (req, res) ->
+  app.post "#{api_prefix}/tweets/:tweet_id/like", require_login(), (req, res) ->
     tweet_id = req.params.tweet_id
     like = {user_id:req.user.user_id, tweet_id: tweet_id, is_like: true}
     yabby.like like, (err) ->
       send_json_response res, err, {}
 
-  app.post "#{api_prefix}/tweets/:tweet_id/unlike", (req, res) ->
+  app.post "#{api_prefix}/tweets/:tweet_id/unlike", require_login(), (req, res) ->
     tweet_id = req.params.tweet_id
     like = {user_id:req.user.user_id, tweet_id: tweet_id, is_like: false}
     yabby.like like, (err) ->
