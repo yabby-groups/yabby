@@ -226,4 +226,10 @@ class Yabby
       return next() if req.user
       res.json {err: 401, msg: 'Unauthorized'}
 
+  require_admin: () ->
+    self = @
+    return (req, res, next) ->
+      return next() if req.user and ~req.user.roles.indexOf('admin')
+      res.json {err: 401, msg: 'Unauthorized'}
+
 module.exports = Yabby
