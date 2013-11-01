@@ -2,6 +2,10 @@ mongoose = require 'mongoose'
 {User, Passwd, OauthToken, Tweet, Comment, File, Like, CommentLike, Favorite} = require './models'
 async = require 'async'
 crypto = require 'crypto'
+password_salt = 'IW~#$@Asfk%*(skaADfd3#f@13l!sa9'
+
+hashed_password = (raw_password) ->
+  return crypto.createHmac('sha1', password_salt).update(raw_password).digest('hex')
 
 class Yabby
   constructor: (@config) ->
