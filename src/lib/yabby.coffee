@@ -2,6 +2,9 @@ mongoose = require 'mongoose'
 {User, Passwd, OauthToken, Tweet, Comment, File, Like, CommentLike, Favorite} = require './models'
 async = require 'async'
 crypto = require 'crypto'
+urlparse = require('url').parse
+util = require 'underscore'
+
 password_salt = 'IW~#$@Asfk%*(skaADfd3#f@13l!sa9'
 
 hashed_password = (raw_password) ->
@@ -194,5 +197,29 @@ class Yabby
           return callback 'your cant like the comment' if err
           Comment.findOneAndUpdate {tweet_id: like.comment_id}, {$inc: {like_count: 1}}, (err, comment) ->
             callback null
+
+  auth: (login_path='/login', logout_path='/logout', auth_path='/auth') ->
+    self = @
+    return (req, res, next) ->
+      url = urlparse(req.url)
+      if req.url.match(/^\/(js|css|img|favicon|logout)$/)
+        next()
+      else if req.session and req.session.user
+        res.header 'P3P', "CP=\"CURa ADMa DEVa PSAo PSDoOUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP  COR\""
+        req.user = util.clone req.session.user
+        next()
+      else
+        return next() if url.pathname isnt auth_path
+        req.body = req.body or {}
+        res.header 'P3P', "CP=\"CURa ADMa DEVa PSAo PSDoOUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP  COR\""
+        User.findOne {username: req.body.username}, 'user_id', (err, user_id) ->
+          return res.json({err: 403, msg: '用户名或密码错误'}) if err
+          Passwd.findOne {user_id: user_id}, 'passwd', (err, passwd) ->
+            return res.json({err: 403, msg: '用户名或密码错误'}) if err
+            hash = hashed_password req.body.passwd
+            return res.json({err: 403, msg: '用户名或密码错误'}) if hash isnt passwd
+            self.get_user user_id, (err, user) ->
+              req.session.user = user
+              res.json user
 
 module.exports = Yabby
