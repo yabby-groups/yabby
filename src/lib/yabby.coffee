@@ -32,9 +32,7 @@ class Yabby
         }
         u.save next
       (u, next) ->
-        shasum = crypto.createHash 'sha1'
-        shasum.update user.passwd
-        hash = shasum.digest 'hex'
+        hash = hashed_password user.passwd
         pwd = new Passwd {
           user_id: u.user_id
           email: user.email
