@@ -232,4 +232,11 @@ class Yabby
       return next() if req.user and ~req.user.roles.indexOf('admin')
       res.json {err: 401, msg: 'Unauthorized'}
 
+  favorite: (fav, callback) ->
+    Favorite.findOne fav, (err, _fav) ->
+      return callback 'your already favorite it' unless _fav
+      _fav = new Favorite fav
+      _fav.save (err, _fav) ->
+        callback err
+
 module.exports = Yabby
