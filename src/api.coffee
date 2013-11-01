@@ -95,3 +95,15 @@ module.exports = (app, yabby) ->
     fav = {user_id:req.user.user_id, tweet_id: tweet_id}
     yabby.favorite fav, (err) ->
       send_json_response res, err, {}
+
+  app.get "#{api_prefix}/users/:user_id/favorite", require_login(), (req, res) ->
+    user_id = req.params.user_id
+    page = req.query.page
+    page = if page then Number(page) else 0
+    limit = req.query.limit
+    limit = if limit then Number(limit) else 10
+    limit = 50 if limit > 50
+    skip = page * limit
+    yabby.get_favorites {user_id: user_id}, {skip: skip, limit: limit, sort: {tweet_id: -1}}, (err, data) ->
+      data = data or {}
+      send_json_response res, err, data
