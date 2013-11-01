@@ -243,6 +243,6 @@ class Yabby
       tweet_ids = favs.map (fav) ->
         return fav.tweet_id
 
-      self.get_tweets {tweet_id: tweet_ids}, callback
+      self.get_tweets {tweet_id: tweet_ids}, null, callback
 
 module.exports = Yabby
