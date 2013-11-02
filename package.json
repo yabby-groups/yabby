@@ -11,5 +11,6 @@
     , "connect-mongo": "*"
     , "mongoose-auto-increment": "*"
     , "formidable": "*"
+    , "upyun": "*"
   }
 }

@@ -5,7 +5,7 @@ crypto = require 'crypto'
 urlparse = require('url').parse
 util = require 'underscore'
 fs = require 'fs'
-UPYun = require('upyun').UPYun
+UPYun = require 'upyun'
 
 password_salt = 'IW~#$@Asfk%*(skaADfd3#f@13l!sa9'
 
@@ -254,21 +254,15 @@ class Yabby
         callback err, data
     self = @
     File.findOne {file_key: file.hash}, (err, _file) ->
-      return cb _file.toJSON() if _file
+      return cb null, _file.toJSON() if _file
       fs.readFile file.path, (err, data) ->
         return cb err if err
         self.upyun.writeFile "/#{bucket}/#{file.hash}", data, true, (err, data) ->
           return cb err if err
-          extra = {
-            width: self.upyun.getWritedFileInfo('x-upyun-width')
-            height: self.upyun.getWritedFileInfo('x-upyun-height')
-            frames: self.upyun.getWritedFileInfo('x-upyun-frames')
-            type: self.upyun.getWritedFileInfo('x-upyun-file-type')
-          }
+          return cb data if status isnt 200
           _file = new File {
             file_key: file.hash
             file_bucket: bucket
-            extra: extra
           }
           _file.save (err, _file) ->
             return cb err if err
