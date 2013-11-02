@@ -271,4 +271,12 @@ class Yabby
             return callback err if err
             callback null, _file.toJSON()
 
+  avatar_upload: (file, user_id, callback) ->
+    @upload file, 'avatar', (err, data) ->
+      return callback err if err
+      return callback 'set avatar fail' unless data
+      User.findOneAndUpdate {user_id: user_id}, {avatar: JSON.stringify(data)}, (err, user) ->
+        return callback 'set avatar fail' if err
+        callback null
+
 module.exports = Yabby
