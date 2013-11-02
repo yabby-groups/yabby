@@ -114,3 +114,9 @@ module.exports = (app, yabby) ->
     form.parse req, (err,fields, files) ->
       yabby.upload files.file, 'tweet', (err, data) ->
         send_json_response res, err, data
+
+  app.post "#{api_prefix}/avatar_upload", require_login(), (req, res) ->
+    form = new formidable.IncomingForm()
+    form.parse req, (err,fields, files) ->
+      yabby.avatar_upload files.file, req.user.user_id, (err) ->
+        send_json_response res, err, {}
