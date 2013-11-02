@@ -205,7 +205,7 @@ class Yabby
     return (req, res, next) ->
       url = urlparse(req.url)
       token = req.get('Authorization')
-      token = if token.substr(0, 6) is 'Bearer' then token.substr(7) else false
+      token = if token and token.substr(0, 6) is 'Bearer' then token.substr(7) else false
       token = req.param('access_token') unless token
 
       if req.url.match(/^\/(js|css|img|favicon|logout)$/)
