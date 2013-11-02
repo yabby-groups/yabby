@@ -1,4 +1,5 @@
 api_prefix = require("./config").api_prefix
+formidable = require 'formidable'
 
 module.exports = (app, yabby) ->
   require_login = yabby.require_login
@@ -107,3 +108,9 @@ module.exports = (app, yabby) ->
     yabby.get_favorites {user_id: user_id}, {skip: skip, limit: limit, sort: {tweet_id: -1}}, (err, data) ->
       data = data or {}
       send_json_response res, err, data
+
+  app.post "#{api_prefix}/upload", require_login(), (req, res) ->
+    form = new formidable.IncomingForm()
+    form.parse req, (err,fields, files) ->
+      yabby.upload files.file, 'tweet', (err, data) ->
+        send_json_response res, err, data
