@@ -61,7 +61,7 @@ module.exports = (app, yabby) ->
     limit = if limit then Number(limit) else 10
     limit = 50 if limit > 50
     skip = page * limit
-    yabby.get_comments tweet_id: tweet_id, {skip: skip, limit: limit, sort: {tweet_id: -1}}, (err, data) ->
+    yabby.get_comments tweet_id: tweet_id, {skip: skip, limit: limit, sort: {comment_id: -1}}, (err, data) ->
       send_json_response res, err, data
 
   app.post "#{api_prefix}/tweets/:tweet_id/comments", require_login(), (req, res) ->

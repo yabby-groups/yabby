@@ -157,6 +157,7 @@ class Yabby
         comments = comments.map (comment) ->
           comment = comment.toJSON()
           comment.user = _users[comment.user_id]
+          return comment
 
         callback null, comments
 
