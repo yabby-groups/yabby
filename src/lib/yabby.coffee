@@ -249,13 +249,16 @@ class Yabby
       self.get_tweets {tweet_id: tweet_ids}, null, callback
 
   upload: (file, bucket, callback) ->
+    cb = (err, data) ->
+      fs.unlink file.path, (e) ->
+        callback err, data
     self = @
     File.findOne {file_key: file.hash}, (err, _file) ->
-      return callback _file.toJSON() if _file
+      return cb _file.toJSON() if _file
       fs.readFile file.path, (err, data) ->
-        return callback err if err
+        return cb err if err
         self.upyun.writeFile "/#{bucket}/#{file.hash}", data, true, (err, data) ->
-          return callback err if err
+          return cb err if err
           extra = {
             width: self.upyun.getWritedFileInfo('x-upyun-width')
             height: self.upyun.getWritedFileInfo('x-upyun-height')
@@ -268,8 +271,8 @@ class Yabby
             extra: extra
           }
           _file.save (err, _file) ->
-            return callback err if err
-            callback null, _file.toJSON()
+            return cb err if err
+            cb null, _file.toJSON()
 
   avatar_upload: (file, user_id, callback) ->
     @upload file, 'avatar', (err, data) ->
