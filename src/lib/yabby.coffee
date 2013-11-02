@@ -285,7 +285,7 @@ class Yabby
 
   favorite: (fav, callback) ->
     Favorite.findOne fav, (err, _fav) ->
-      return callback 'your already favorite it' unless _fav
+      return callback 'your already favorite it' if _fav
       _fav = new Favorite fav
       _fav.save (err, _fav) ->
         callback err

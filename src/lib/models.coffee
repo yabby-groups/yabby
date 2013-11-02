@@ -63,8 +63,8 @@ CommentLike = new Schema
   created_at: {type: Date, default: Date.now}
 
 Favorite = new Schema
-  user_id: Schema.ObjectId
-  tweet_id: Schema.ObjectId
+  user_id: Number
+  tweet_id: Number
   created_at: {type: Date, default: Date.now}
 
 exports.User = mongoose.model 'User', User
