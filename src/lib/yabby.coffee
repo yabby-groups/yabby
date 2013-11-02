@@ -34,7 +34,8 @@ class Yabby
           username: user.username
           avatar: user.avatar
         }
-        u.save next
+        u.save (err, u, count) ->
+          next err, u
       (u, next) ->
         hash = hashed_password user.passwd
         pwd = new Passwd {
@@ -42,7 +43,8 @@ class Yabby
           email: user.email
           passwd: hash
         }
-        pwd.save next
+        pwd.save (err, pwd, count) ->
+          next err, pwd
     ], (err, result) ->
       callback err
 
