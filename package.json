@@ -10,5 +10,6 @@
     , "underscore": "*"
     , "connect-mongo": "*"
     , "mongoose-auto-increment": "*"
+    , "formidable": "*"
   }
 }
