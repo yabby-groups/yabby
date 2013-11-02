@@ -212,6 +212,7 @@ class Yabby
       token = req.get('Authorization')
       token = if token and token.substr(0, 6) is 'Bearer' then token.substr(7) else false
       token = req.param('access_token') unless token
+      now = new Date()
 
       if req.url.match(/^\/(js|css|img|favicon|logout)$/)
         next()
@@ -221,11 +222,10 @@ class Yabby
         next()
       else if token
         OauthToken.findOne {access_token: token}, (err, token) ->
-          now = new Date()
-          if err or not token or token.created_at + expires_in * 1000 < now
+          if err or not token or token.created_at + token.expires_in * 1000 < now
             res.json {err: 401, 'Unauthorized'}
           else
-            self.get_user toke.user_id, (err, user) ->
+            self.get_user token.user_id, (err, user) ->
               return res.json {err: 401, 'Unauthorized'} if err
               req.user = user
               next()
@@ -263,13 +263,14 @@ class Yabby
               res.json user
 
   do_auth: (username, passwd, callback) ->
-    User.findOne {username: username}, 'user_id', (err, user_id) ->
+    self = @
+    User.findOne {username: username}, 'user_id', (err, user) ->
       return callback 'User not found' if err
-      Passwd.findOne {user_id: user_id}, 'passwd', (err, passwd) ->
+      Passwd.findOne {user_id: user.user_id}, 'passwd', (err, pwd) ->
         return callback 'passwd not found' if err
         hash = hashed_password passwd
-        return callback 'passwd not match' if hash isnt passwd
-        self.get_user user_id, callback
+        return callback 'passwd not match' if hash isnt pwd.passwd
+        self.get_user user.user_id, callback
 
   require_login: () ->
     return (req, res, next) ->
