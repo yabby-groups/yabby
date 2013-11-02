@@ -52,14 +52,14 @@ File = new Schema
 File.plugin autoIncrement.plugin, {model: 'File', field: 'file_id'}
 
 Like = new Schema
-  user_id: Schema.ObjectId
-  tweet_id: Schema.ObjectId
+  user_id: Number
+  tweet_id: Number
   is_like: {type: Boolean, default: true}
   created_at: {type: Date, default: Date.now}
 
 CommentLike = new Schema
-  user_id: Schema.ObjectId
-  comment_id: Schema.ObjectId
+  user_id: Number
+  comment_id: Number
   created_at: {type: Date, default: Date.now}
 
 Favorite = new Schema
