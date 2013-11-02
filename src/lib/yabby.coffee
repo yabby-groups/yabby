@@ -4,6 +4,8 @@ async = require 'async'
 crypto = require 'crypto'
 urlparse = require('url').parse
 util = require 'underscore'
+fs = require 'fs'
+UPYun = require('upyun').UPYun
 
 password_salt = 'IW~#$@Asfk%*(skaADfd3#f@13l!sa9'
 
@@ -13,6 +15,7 @@ hashed_password = (raw_password) ->
 class Yabby
   constructor: (@config) ->
     mongoose.connect @config.mongod
+    @upyun = UPYun @config.upyun.bucket, @config.upyun.username, @config.upyun.passwd
 
   create_user: (user, callback) ->
     self = @
@@ -244,5 +247,28 @@ class Yabby
         return fav.tweet_id
 
       self.get_tweets {tweet_id: tweet_ids}, null, callback
+
+  upload: (file, bucket, callback) ->
+    self = @
+    File.findOne {file_key: file.hash}, (err, _file) ->
+      return callback _file.toJSON() if _file
+      fs.readFile file.path, (err, data) ->
+        return callback err if err
+        self.upyun.writeFile "/#{bucket}/#{file.hash}", data, true, (err, data) ->
+          return callback err if err
+          extra = {
+            width: self.upyun.getWritedFileInfo('x-upyun-width')
+            height: self.upyun.getWritedFileInfo('x-upyun-height')
+            frames: self.upyun.getWritedFileInfo('x-upyun-frames')
+            type: self.upyun.getWritedFileInfo('x-upyun-file-type')
+          }
+          _file = new File {
+            file_key: file.hash
+            file_bucket: bucket
+            extra: extra
+          }
+          _file.save (err, _file) ->
+            return callback err if err
+            callback null, _file.toJSON()
 
 module.exports = Yabby
