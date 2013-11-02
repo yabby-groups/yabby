@@ -170,16 +170,16 @@ class Yabby
           callback 'you are already like or unlike it'
         else
           if _like.is_like and not like.is_like
-            _like.delete (err) ->
+            _like.remove (err) ->
               return callback 'you cant like it' if err
               Tweet.findOneAndUpdate {tweet_id: like.tweet_id}, {$inc: {like_count: -1}}, (err, tweet) ->
                 callback null
           else
-            _like.delete (err) ->
+            _like.remove (err) ->
               return callback 'you cant unlike it' if err
               Tweet.findOneAndUpdate {tweet_id: like.tweet_id}, {$inc: {unlike_count: -1}}, (err, tweet) ->
                 callback null
-            _like.delete callback
+            _like.remove callback
       else
         _like = new Like like
         _like.save (err, _like) ->
@@ -194,7 +194,7 @@ class Yabby
   comment_like: (like, callback) ->
     CommentLike.findOne {user_id: like.user_id, comment_id: like.comment_id}, (err, _like) ->
       if _like
-        _like.delete (err) ->
+        _like.remove (err) ->
           return callback 'your cant unlike the comment' if err
           Comment.findOneAndUpdate {tweet_id: like.comment_id}, {$inc: {like_count: -1}}, (err, comment) ->
             callback null
@@ -236,9 +236,9 @@ class Yabby
         res.header 'P3P', "CP=\"CURa ADMa DEVa PSAo PSDoOUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP  COR\""
         if type is 'refresh_token'
           OauthToken.findOne {refresh_token: body.refresh_token}, (err, token) ->
-            res.json {err: 403, msg: 'Token not found'} if err or not token
+            return res.json {err: 403, msg: 'Token not found'} if err or not token
             if token.created_at + 60 * 24 * 3600 * 1000 < now
-              token.delete (err) ->
+              token.remove (err) ->
                 res.json {err: 403, msg: 'refresh_token expires'}
             else
               token.access_token = uuid()
