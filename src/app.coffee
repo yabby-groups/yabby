@@ -28,8 +28,8 @@ app.use express.session {
   secret: config.cookie_secret,
   store: new MongoStore({url: config.mongod})
 }
+app.use yabby.auth()
 app.use app.router
-app.use yabby.auth
 app.use express.static(path.join(__dirname, 'public'))
 app.all '*', (req, res, next) ->
   res.header("Access-Control-Allow-Origin", "*")

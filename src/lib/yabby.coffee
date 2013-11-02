@@ -5,6 +5,7 @@ crypto = require 'crypto'
 urlparse = require('url').parse
 util = require 'underscore'
 fs = require 'fs'
+uuid = require('uuid').v4
 UPYun = require 'upyun'
 
 password_salt = 'IW~#$@Asfk%*(skaADfd3#f@13l!sa9'
@@ -199,29 +200,71 @@ class Yabby
           Comment.findOneAndUpdate {tweet_id: like.comment_id}, {$inc: {like_count: 1}}, (err, comment) ->
             callback null
 
-  auth: (login_path='/login', logout_path='/logout', auth_path='/auth') ->
+  auth: (auth_path='/auth') ->
     self = @
     return (req, res, next) ->
       url = urlparse(req.url)
+      token = req.get('Authorization')
+      token = if token.substr(0, 6) is 'Bearer' then token.substr(7) else false
+      token = req.param('access_token') unless token
+
       if req.url.match(/^\/(js|css|img|favicon|logout)$/)
         next()
       else if req.session and req.session.user
         res.header 'P3P', "CP=\"CURa ADMa DEVa PSAo PSDoOUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP  COR\""
         req.user = util.clone req.session.user
         next()
+      else if token
+        OauthToken.findOne {access_token: token}, (err, token) ->
+          now = new Date()
+          if err or not token or token.created_at + expires_in * 1000 < now
+            res.json {err: 401, 'Unauthorized'}
+          else
+            self.get_user toke.user_id, (err, user) ->
+              return res.json {err: 401, 'Unauthorized'} if err
+              req.user = user
+              next()
       else
         return next() if url.pathname isnt auth_path
-        req.body = req.body or {}
+        type = req.param('type')
+        body = req.body or {}
         res.header 'P3P', "CP=\"CURa ADMa DEVa PSAo PSDoOUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP  COR\""
-        User.findOne {username: req.body.username}, 'user_id', (err, user_id) ->
-          return res.json({err: 403, msg: '用户名或密码错误'}) if err
-          Passwd.findOne {user_id: user_id}, 'passwd', (err, passwd) ->
-            return res.json({err: 403, msg: '用户名或密码错误'}) if err
-            hash = hashed_password req.body.passwd
-            return res.json({err: 403, msg: '用户名或密码错误'}) if hash isnt passwd
-            self.get_user user_id, (err, user) ->
+        if type is 'refresh_token'
+          OauthToken.findOne {refresh_token: body.refresh_token}, (err, token) ->
+            res.json {err: 403, msg: 'Token not found'} if err or not token
+            if token.created_at + 60 * 24 * 3600 * 1000 < now
+              token.delete (err) ->
+                res.json {err: 403, msg: 'refresh_token expires'}
+            else
+              token.access_token = uuid()
+              token.save (err, token) ->
+                res.json token.toJSON()
+        else
+          self.do_auth body.username, body.passwd, (err, user) ->
+            return res.json {err: 403, msg: '用户名或密码错误'} if err
+            if type is 'access_token'
+              token = new OauthToken {
+                user_id: user.user_id
+                access_token: uuid()
+                refresh_token: uuid()
+                expires_in: 7 * 24 * 3600
+              }
+
+              token.save (err, token) ->
+                return res.json {err: 403, msg: '用户名或密码错误'} if err
+                res.json token.toJSON()
+            else
               req.session.user = user
               res.json user
+
+  do_auth: (username, passwd, callback) ->
+    User.findOne {username: username}, 'user_id', (err, user_id) ->
+      return callback 'User not found' if err
+      Passwd.findOne {user_id: user_id}, 'passwd', (err, passwd) ->
+        return callback 'passwd not found' if err
+        hash = hashed_password passwd
+        return callback 'passwd not match' if hash isnt passwd
+        self.get_user user_id, callback
 
   require_login: () ->
     return (req, res, next) ->

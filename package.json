@@ -12,5 +12,6 @@
     , "mongoose-auto-increment": "*"
     , "formidable": "*"
     , "upyun": "*"
+    , "uuid": "*"
   }
 }
