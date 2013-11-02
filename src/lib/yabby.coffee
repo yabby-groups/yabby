@@ -91,25 +91,28 @@ class Yabby
   get_tweets: (query, options, callback) ->
     Tweet.find query, null, options, (err, tweets) ->
       return callback 'there if not tweets' if err
-      return callback null, null unless tweets
+      return callback null, [] if tweets.length is 0
       async.parallel {
         users: (next) ->
           user_ids = tweets.map (tweet) ->
             return tweet.user_id
 
-          User.find {user_id: user_ids}, (err, users) ->
+          return next null, {} if user_ids.length is 0
+
+          User.find user_id: {$in: user_ids}, (err, users) ->
             ret = {}
-            users.forEach users, (user) ->
+            users.forEach (user) ->
               user = user.toJSON()
               user.avatar = JSON.parse(user.avatar) if user.avatar
-              ret[user_id] = user
+              ret[user.user_id] = user
             next null, ret
         files: (next) ->
           file_ids = tweets.map (tweet) ->
             return tweet.file_id
           file_ids = file_ids.filter (file_id) ->
             return file_id
-          File.find file_id: file_ids, (err, files) ->
+          return next null, {} if file_ids.length is 0
+          File.find file_id: {$in :file_ids}, (err, files) ->
             ret = {}
             files.forEach (file) ->
               ret[file.file_id] = file.toJSON()
@@ -138,11 +141,11 @@ class Yabby
 
   get_comments: (query, options, callback) ->
     Comment.find query, null, options, (err, comments) ->
-      return callback 'not comments' if err or not comments
+      return callback 'not comments' if err or comments.length is 0
       user_ids = comments.map (comment) ->
         return comment.user_id
 
-      User.find {user_id: user_ids}, (err, users) ->
+      User.find user_id: {$in: user_ids}, (err, users) ->
         _users = {}
         users.forEach (user) ->
           user = user.toJSON()
@@ -286,6 +289,7 @@ class Yabby
   get_favorites: (query, options, callback) ->
     self = @
     Favorite.find query, null, options, (err, favs) ->
+      return callback 'not favorite found' if err or favs.length is 0
       tweet_ids = favs.map (fav) ->
         return fav.tweet_id
 
