@@ -308,7 +308,7 @@ class Yabby
       return cb null, _file.toJSON() if _file
       fs.readFile file.path, (err, data) ->
         return cb err if err
-        self.upyun.writeFile "/#{bucket}/#{file.hash}", data, true, (err, data) ->
+        self.upyun.uploadFile "/#{bucket}/#{file.hash}", data, (err, status, data) ->
           return cb err if err
           return cb data if status isnt 200
           _file = new File {
