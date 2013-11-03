@@ -224,11 +224,10 @@ class Yabby
       else if token
         OauthToken.findOne {access_token: token}, (err, token) ->
           if err or not token or token.created_at + token.expires_in * 1000 < now
-            res.json {err: 401, 'Unauthorized'}
+            next()
           else
             self.get_user token.user_id, (err, user) ->
-              return res.json {err: 401, 'Unauthorized'} if err
-              req.user = user
+              req.user = user if user
               next()
       else
         return next() if url.pathname isnt auth_path
