@@ -333,4 +333,25 @@ class Yabby
         return callback 'set avatar fail' if err
         callback null
 
+  save_channel: (channel, callback) ->
+    if channel.channel_id
+      Channel.findOne channel_id: channel.channel_id, (err, chan) ->
+        return callback 'channel is not found' unless chan
+        Channel.find $or: [{urlname: channel.urlname}, {title: channel.title}], (err, chans) ->
+          chans = chans.filter (_chan) ->
+            return _chan.channel_id isnt chan.channel_id
+          return callback 'urlname and title is already used' if chans.length is 2
+          return callback 'urlname is already used' if chans[0].urlname is channel.urlname
+          return callback 'title is already used' if chans[0].title is channel.title
+          chan.urlname = channel.urlname
+          chan.title = channel.title
+          chan.save callback
+    else
+      Channel.find $or: [{urlname: channel.urlname}, {title:channel.title}], (err, chans) ->
+        return callback 'urlname and title is already used' if chans.length is 2
+        return callback 'urlname is already used' if chans[0].urlname is channel.urlname
+        return callback 'title is already used' if chans[0].title is channel.title
+        chan = new Channel channel
+        chan.save callback
+
 module.exports = Yabby
