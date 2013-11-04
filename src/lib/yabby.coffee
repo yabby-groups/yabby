@@ -363,4 +363,11 @@ class Yabby
 
       self.get_tweets tweet_id: {$in: tweet_ids}, null, callback
 
+  add_channel_tweet: (ctweet, callback) ->
+    ChannelTweet.findOne ctweet, (err, _ctweet) ->
+      return callback 'your already add it' if _ctweet
+      _ctweet = new ChannelTweet ctweet
+      _ctweet.save (err, _ctweet) ->
+        callback err
+
 module.exports = Yabby
