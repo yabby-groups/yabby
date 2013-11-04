@@ -354,4 +354,13 @@ class Yabby
         chan = new Channel channel
         chan.save callback
 
+  get_channel_tweets: (query, options, callback) ->
+    self = @
+    ChannelTweet.find query, null, options, (err, channel_tweets) ->
+      return callback 'not favorite found' if err or channel_tweets.length is 0
+      tweet_ids = channel_tweets.map (ctweet) ->
+        return ctweet.tweet_id
+
+      self.get_tweets tweet_id: {$in: tweet_ids}, null, callback
+
 module.exports = Yabby
