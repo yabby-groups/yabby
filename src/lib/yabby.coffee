@@ -161,8 +161,15 @@ class Yabby
 
         callback null, comments
 
-  del_comment: (comment, callback) ->
-    Comment.findOneAndRemove comment, callback
+  remove_comment: (comment, callback) ->
+    Comment.findOneAndRemove comment, (err, comment) ->
+      async.parallel [
+        (next) ->
+          User.findOneAndUpdate {user_id: comment.user_id}, {$inc: {comment_count: -1}}, next
+        (next) ->
+          Tweet.findOneAndUpdate {tweet_id: comment.tweet_id}, {$inc: {comment_count: -1}}, next
+      ], (e) ->
+        callback err
 
   like: (like, callback) ->
     Like.findOne {user_id: like.user_id, tweet_id: like.tweet_id}, (err, _like) ->
