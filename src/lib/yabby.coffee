@@ -370,4 +370,10 @@ class Yabby
       _ctweet.save (err, _ctweet) ->
         callback err
 
+  remove_channel_tweet: (ctweet, callback) ->
+    ChannelTweet.findOne ctweet, (err, _ctweet) ->
+      return callback 'ChannelTweet not found' unless _ctweet
+      ctweet.remove (err) ->
+        callback err
+
 module.exports = Yabby
