@@ -303,7 +303,7 @@ class Yabby
       tweet_ids = favs.map (fav) ->
         return fav.tweet_id
 
-      self.get_tweets {tweet_id: tweet_ids}, null, callback
+      self.get_tweets tweet_id: {$in: tweet_ids}, null, callback
 
   upload: (file, bucket, callback) ->
     cb = (err, data) ->
