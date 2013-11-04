@@ -25,7 +25,7 @@ OauthToken = new Schema
   expires_in: {type: Number, default: 3600 * 24 * 7}
 
 Tweet = new Schema
-  user_id: Number
+  user_id: {type: Number, index: true}
   text: String
   file_id: Number
   comment_count: {type: Number, default: 0}
@@ -63,7 +63,7 @@ CommentLike = new Schema
   created_at: {type: Date, default: Date.now}
 
 Favorite = new Schema
-  user_id: Number
+  user_id: {type: Number, index: true}
   tweet_id: Number
   created_at: {type: Date, default: Date.now}
 
