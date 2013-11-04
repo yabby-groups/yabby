@@ -67,6 +67,18 @@ Favorite = new Schema
   tweet_id: Number
   created_at: {type: Date, default: Date.now}
 
+Channel = new Schema
+  urlname: {type: String, index: {unique: true}}
+  title: {type: String, index: {unique: true}}
+  created_at: {type: Date, default: Date.now}
+
+Channel.plugin autoIncrement.plugin, {model: 'Channel', field: 'channel_id'}
+
+ChannelTweet = new Schema
+  channel_id: {type: Number, index: true}
+  tweet_id: Number
+  created_at: {type: Date, default: Date.now}
+
 exports.User = mongoose.model 'User', User
 exports.Passwd = mongoose.model 'Passwd', Passwd
 exports.OauthToken = mongoose.model 'OauthToken', OauthToken
@@ -76,3 +88,5 @@ exports.File = mongoose.model 'File', File
 exports.Like = mongoose.model 'Like', Like
 exports.CommentLike = mongoose.model 'CommentLike', CommentLike
 exports.Favorite = mongoose.model 'Favorite', Favorite
+exports.Channel = mongoose.model 'Channel', Channel
+exports.ChannelTweet = mongoose.model 'ChannelTweet', ChannelTweet
