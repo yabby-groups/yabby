@@ -356,12 +356,17 @@ class Yabby
 
   get_channel_tweets: (query, options, callback) ->
     self = @
-    ChannelTweet.find query, null, options, (err, channel_tweets) ->
-      return callback 'not favorite found' if err or channel_tweets.length is 0
-      tweet_ids = channel_tweets.map (ctweet) ->
-        return ctweet.tweet_id
+    Channel.find query, (err, channel) ->
+      return callback 'channel not exists' unless channel
+      ChannelTweet.find channel_id: channel.channel_id, null, options, (err, channel_tweets) ->
+        return callback 'not channel tweets found' if err or channel_tweets.length is 0
+        tweet_ids = channel_tweets.map (ctweet) ->
+          return ctweet.tweet_id
 
-      self.get_tweets tweet_id: {$in: tweet_ids}, null, callback
+        self.get_tweets tweet_id: {$in: tweet_ids}, null, (err, tweets) ->
+          channel = channel.toJSON()
+          channel.tweets = tweets
+          callback null, channel
 
   add_channel_tweet: (ctweet, callback) ->
     ChannelTweet.findOne ctweet, (err, _ctweet) ->
