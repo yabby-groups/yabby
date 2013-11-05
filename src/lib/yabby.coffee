@@ -1,5 +1,6 @@
 mongoose = require 'mongoose'
-{User, Passwd, OauthToken, Tweet, Comment, File, Like, CommentLike, Favorite} = require './models'
+{User, Passwd, OauthToken, Tweet, Comment, File, Like, CommentLike, Favorite,
+  Channel, ChannelTweet} = require './models'
 async = require 'async'
 crypto = require 'crypto'
 urlparse = require('url').parse
@@ -339,18 +340,20 @@ class Yabby
         return callback 'channel is not found' unless chan
         Channel.find $or: [{urlname: channel.urlname}, {title: channel.title}], (err, chans) ->
           chans = chans.filter (_chan) ->
-            return _chan.channel_id isnt chan.channel_id
+            return _chan and _chan.channel_id isnt chan.channel_id
           return callback 'urlname and title is already used' if chans.length is 2
-          return callback 'urlname is already used' if chans[0].urlname is channel.urlname
-          return callback 'title is already used' if chans[0].title is channel.title
+          if chans.length is 1
+            return callback 'urlname is already used' if chans[0].urlname is channel.urlname
+            return callback 'title is already used' if chans[0].title is channel.title
           chan.urlname = channel.urlname
           chan.title = channel.title
           chan.save callback
     else
       Channel.find $or: [{urlname: channel.urlname}, {title:channel.title}], (err, chans) ->
         return callback 'urlname and title is already used' if chans.length is 2
-        return callback 'urlname is already used' if chans[0].urlname is channel.urlname
-        return callback 'title is already used' if chans[0].title is channel.title
+        if chans.length is 1
+          return callback 'urlname is already used' if chans[0].urlname is channel.urlname
+          return callback 'title is already used' if chans[0].title is channel.title
         chan = new Channel channel
         chan.save callback
 
