@@ -254,7 +254,7 @@ class Yabby
                 res.json token.toJSON()
         else
           self.do_auth body.username, body.passwd, (err, user) ->
-            return res.json {err: 403, msg: '用户名或密码错误'} if err
+            return res.json {err: 403, msg: '用户名或密码错误'} if err or not user
             if type is 'access_token'
               token = new OauthToken {
                 user_id: user.user_id
@@ -273,9 +273,9 @@ class Yabby
   do_auth: (username, passwd, callback) ->
     self = @
     User.findOne {username: username}, 'user_id', (err, user) ->
-      return callback 'User not found' if err
+      return callback 'User not found' unless user
       Passwd.findOne {user_id: user.user_id}, 'passwd', (err, pwd) ->
-        return callback 'passwd not found' if err
+        return callback 'passwd not found' unless pwd
         hash = hashed_password passwd
         return callback 'passwd not match' if hash isnt pwd.passwd
         self.get_user user.user_id, callback
