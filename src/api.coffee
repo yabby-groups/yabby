@@ -124,3 +124,21 @@ module.exports = (app, yabby) ->
       return send_json_response res, 'please choose file' unless files.file
       yabby.avatar_upload files.file, req.user.user_id, (err) ->
         send_json_response res, err, {}
+
+  app.get "#{api_prefix}/channel/:urlname_or_channel_id", (req, res) ->
+    urlname_or_channel_id = req.params.urlname_or_channel_id
+    page = req.query.page
+    page = if page then Number(page) else 0
+    limit = req.query.limit
+    limit = if limit then Number(limit) else 10
+    limit = 50 if limit > 50
+    skip = page * limit
+    options = {skip: skip, limit: limit, sort: {channel_id: -1}}
+    query = {}
+    if /^\d+$/.exec(urlname_or_channel_id)
+      query.channel_id = Number(urlname_or_channel_id)
+    else
+      query.urlname = urlname_or_channel_id
+
+    yabby.get_channel_tweets query, options, (err, ctweets) ->
+      send_json_response res, err, ctweets
