@@ -359,7 +359,7 @@ class Yabby
 
   get_channel_tweets: (query, options, callback) ->
     self = @
-    Channel.find query, (err, channel) ->
+    Channel.findOne query, (err, channel) ->
       return callback 'channel not exists' unless channel
       ChannelTweet.find channel_id: channel.channel_id, null, options, (err, channel_tweets) ->
         return callback 'not channel tweets found' if err or channel_tweets.length is 0
