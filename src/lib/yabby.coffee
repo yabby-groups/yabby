@@ -1,6 +1,6 @@
 mongoose = require 'mongoose'
 {User, Passwd, OauthToken, Tweet, Comment, File, Like, CommentLike, Favorite,
-  Channel, ChannelTweet} = require './models'
+  Channel, ChannelTweet, Sequence} = require './models'
 async = require 'async'
 crypto = require 'crypto'
 urlparse = require('url').parse
@@ -368,15 +368,23 @@ class Yabby
 
         self.get_tweets tweet_id: {$in: tweet_ids}, null, (err, tweets) ->
           channel = channel.toJSON()
-          channel.tweets = tweets
+          tweet_seqs = {}
+          channel_tweets.forEach (ct) ->
+            tweet_seqs[ct.tweet_id] = ct.seq
+
+          channel.tweets = tweets.map (tweet) ->
+            tweet.seq = tweet_seqs[tweet.tweet_id]
+            return tweet
           callback null, channel
 
   add_channel_tweet: (ctweet, callback) ->
     ChannelTweet.findOne ctweet, (err, _ctweet) ->
       return callback 'your already add it' if _ctweet
       _ctweet = new ChannelTweet ctweet
-      _ctweet.save (err, _ctweet) ->
-        callback err
+      Sequence.next "channel:#{ctweet.channel_id}", (seq) ->
+        _ctweet.seq = seq
+        _ctweet.save (err, _ctweet) ->
+          callback err
 
   remove_channel_tweet: (ctweet, callback) ->
     ChannelTweet.findOne ctweet, (err, _ctweet) ->
