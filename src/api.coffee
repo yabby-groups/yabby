@@ -122,8 +122,8 @@ module.exports = (app, yabby) ->
     form.hash = 'sha1'
     form.parse req, (err,fields, files) ->
       return send_json_response res, 'please choose file' unless files.file
-      yabby.avatar_upload files.file, req.user.user_id, (err) ->
-        send_json_response res, err, {}
+      yabby.avatar_upload files.file, req.user.user_id, (err, data) ->
+        send_json_response res, err, data
 
   app.get "#{api_prefix}/channel/:urlname_or_channel_id", (req, res) ->
     urlname_or_channel_id = req.params.urlname_or_channel_id

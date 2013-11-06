@@ -332,7 +332,7 @@ class Yabby
       return callback 'set avatar fail' unless data
       User.findOneAndUpdate {user_id: user_id}, {avatar: JSON.stringify(data)}, (err, user) ->
         return callback 'set avatar fail' if err
-        callback null
+        callback null, data
 
   save_channel: (channel, callback) ->
     if channel.channel_id
