@@ -392,4 +392,13 @@ class Yabby
       ctweet.remove (err) ->
         callback err
 
+  unread: (query, callback) ->
+    if query.channel_id
+      ChannelTweet.count {channel_id: query.channel_id, $gt: {seq: query.seq}}, (err, count) ->
+        callback err, count
+
+    else
+      Tweet.count {$gt: {tweet_id: query.seq}}, (err, count) ->
+        callback err, count
+
 module.exports = Yabby
