@@ -393,6 +393,7 @@ class Yabby
         callback err
 
   unread: (query, callback) ->
+    return callback 'seq not found' unless query.seq
     if query.channel_id
       ChannelTweet.count {channel_id: query.channel_id, $gt: {seq: query.seq}}, (err, count) ->
         callback err, count
