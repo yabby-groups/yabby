@@ -394,12 +394,13 @@ class Yabby
 
   unread: (query, callback) ->
     return callback 'seq not found' unless query.seq
+    seq = Number query.seq
     if query.channel_id
-      ChannelTweet.count {channel_id: query.channel_id, $gt: {seq: query.seq}}, (err, count) ->
+      ChannelTweet.count {channel_id: query.channel_id, seq: {$gt: seq}}, (err, count) ->
         callback err, count
 
     else
-      Tweet.count {$gt: {tweet_id: query.seq}}, (err, count) ->
+      Tweet.count {tweet_id: {$gt: seq}}, (err, count) ->
         callback err, count
 
 module.exports = Yabby
