@@ -142,3 +142,7 @@ module.exports = (app, yabby) ->
 
     yabby.get_channel_tweets query, options, (err, ctweets) ->
       send_json_response res, err, ctweets
+
+  app.get "#{api_prefix}/unread", (req, res) ->
+    yabby.unread req.query, (err, count) ->
+      send_json_response res, err, {unread: count}
