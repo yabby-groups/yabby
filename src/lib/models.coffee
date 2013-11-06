@@ -79,6 +79,10 @@ ChannelTweet = new Schema
   tweet_id: Number
   created_at: {type: Date, default: Date.now}
 
+Sequence = new Schema
+  name: {type: String, index: {unique: true}}
+  id: {type: Number, default: 0}
+
 exports.User = mongoose.model 'User', User
 exports.Passwd = mongoose.model 'Passwd', Passwd
 exports.OauthToken = mongoose.model 'OauthToken', OauthToken
@@ -90,3 +94,10 @@ exports.CommentLike = mongoose.model 'CommentLike', CommentLike
 exports.Favorite = mongoose.model 'Favorite', Favorite
 exports.Channel = mongoose.model 'Channel', Channel
 exports.ChannelTweet = mongoose.model 'ChannelTweet', ChannelTweet
+exports.Sequence = mongoose.model 'Sequence', Sequence
+exports.Sequence.next = (name, callback) ->
+  exports.Sequence.findOneAndUpdate {name: name}, {$inc: {id: 1}}, {new: true}, (err, seq) ->
+    return callback seq.id if seq and seq.id
+    seq = new exports.Sequence {name: name}
+    seq.save (err, seq) ->
+      callback seq.id
