@@ -77,6 +77,7 @@ Channel.plugin autoIncrement.plugin, {model: 'Channel', field: 'channel_id'}
 ChannelTweet = new Schema
   channel_id: {type: Number, index: true}
   tweet_id: Number
+  seq: Number
   created_at: {type: Date, default: Date.now}
 
 Sequence = new Schema
