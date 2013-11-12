@@ -1,6 +1,6 @@
 mongoose = require 'mongoose'
 {User, Passwd, OauthToken, Tweet, Comment, File, Like, CommentLike, Favorite,
-  Channel, ChannelTweet, Sequence} = require './models'
+  Channel, ChannelTweet, Sequence, UserView} = require './models'
 async = require 'async'
 crypto = require 'crypto'
 urlparse = require('url').parse
@@ -402,5 +402,15 @@ class Yabby
     else
       Tweet.count {tweet_id: {$gt: seq}}, (err, count) ->
         callback err, count
+
+  set_view: (view, callback) ->
+    UserView.findOneAndUpdate {channel_id: view.channel_id, user_id: view.user_id}
+    , {last_seq: view.last_seq}, {new: true}, (err, _view) ->
+      return callback err if err
+      return callback null, _view.toJSON() if _view
+      _view = new UserView view
+      _view.save (err, _view) ->
+        return callback err if err
+        callback null, _view.toJSON()
 
 module.exports = Yabby
