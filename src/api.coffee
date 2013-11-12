@@ -146,3 +146,12 @@ module.exports = (app, yabby) ->
   app.get "#{api_prefix}/unread", (req, res) ->
     yabby.unread req.query, (err, count) ->
       send_json_response res, err, {unread: count}
+
+  app.post "#{api_prefix}/users/view", require_login(), (req, res) ->
+    view = {
+      channel_id: req.param('channel_id'),
+      user_id: req.user.user_id,
+      last_seq: req.param('last_seq')
+    }
+    yabby.set_view view, (err, data) ->
+      send_json_response res, err, data
