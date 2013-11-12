@@ -413,4 +413,10 @@ class Yabby
         return callback err if err
         callback null, _view.toJSON()
 
+  get_view: (view, callback) ->
+    UserView.findOne {channel_id: view.channel_id, user_id: view.user_id}, (err, _view) ->
+      return callback err if err
+      return callback null, _view.toJSON() if _view
+      callback 'view not found'
+
 module.exports = Yabby
