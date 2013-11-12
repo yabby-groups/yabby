@@ -80,6 +80,11 @@ ChannelTweet = new Schema
   seq: Number
   created_at: {type: Date, default: Date.now}
 
+UserView = new Schema
+  channel_id: {type: Number, index: true}
+  user_id: Number
+  last_seq: Number
+
 Sequence = new Schema
   name: {type: String, index: {unique: true}}
   id: {type: Number, default: 0}
@@ -95,6 +100,7 @@ exports.CommentLike = mongoose.model 'CommentLike', CommentLike
 exports.Favorite = mongoose.model 'Favorite', Favorite
 exports.Channel = mongoose.model 'Channel', Channel
 exports.ChannelTweet = mongoose.model 'ChannelTweet', ChannelTweet
+exports.UserView = mongoose.model 'UserView', UserView
 exports.Sequence = mongoose.model 'Sequence', Sequence
 exports.Sequence.next = (name, callback) ->
   exports.Sequence.findOneAndUpdate {name: name}, {$inc: {id: 1}}, {new: true}, (err, seq) ->
