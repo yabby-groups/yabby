@@ -9,6 +9,7 @@ module.exports = (app, yabby) ->
     if err
       res.json {err: 401, msg: err}
     else
+      data = {} unless data
       res.json data
 
   app.get "#{api_prefix}/users/me", require_login(), (req, res) ->
