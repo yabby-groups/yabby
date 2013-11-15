@@ -89,7 +89,30 @@ class Yabby
         callback null, tweet
 
   del_tweet: (tweet, callback) ->
-    Tweet.findOneAndRemove tweet, callback
+    self = @
+    async.waterfall [
+      (next) ->
+        Tweet.findOneAndRemove tweet, (err, t) ->
+          return next err if err
+          return next 'tweet not exists' unless t
+          next()
+      (next) ->
+        limit = 1000
+        _remove = () ->
+          Comment.find {tweet_id: tweet.tweet_id}, null, {limit: limit}, (err, comments) ->
+            return next() if err
+            return next() if comments.length is 0
+            async.eachLimit comments, 5, (comment, next) ->
+              User.findOneAndUpdate {user_id: comment.user_id}, {$inc: {comment_count: -1}}, (err) ->
+                comment.remove (err) ->
+                  next()
+            , (err) ->
+              _remove()
+      (next) ->
+        User.findOneAndUpdate {user_id: tweet.user_id}, {$inc: {tweet_count: -1}}, (err, user) ->
+          next()
+    ], (err) ->
+      callback err
 
   get_tweets: (query, options, callback) ->
     Tweet.find query, null, options, (err, tweets) ->
