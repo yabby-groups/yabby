@@ -178,3 +178,8 @@ module.exports = (app, yabby) ->
     }
     yabby.set_view view, (err, data) ->
       send_json_response res, err, data
+
+  app.post "#{api_prefix}/channel", require_admin(), (req, res) ->
+    channel = req.body
+    yabby.save_channel channel, (err, data) ->
+      send_json_response res, err, data
