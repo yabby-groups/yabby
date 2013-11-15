@@ -193,3 +193,17 @@ module.exports = (app, yabby) ->
       channel.urlname = urlname_or_channel_id
     yabby.del_channel channel, (err, data) ->
       send_json_response res, err, data
+
+  app.post "#{api_prefix}/channel/:urlname_or_channel_id/tweets", require_admin(), (req, res) ->
+    body = req.body || {}
+    if not body.channel_id
+      urlname_or_channel_id = req.params.urlname_or_channel_id
+      if /^\d+$/.exec(urlname_or_channel_id)
+        body.channel_id = Number(urlname_or_channel_id)
+
+    return send_json_response res, 'Invalid params' if not body.channel_id or not body.tweet_id
+    t =
+      channel_id: body.channel_id
+      tweet_id: body.tweet_id
+    yabby.add_channel_tweet t, (err, data) ->
+      send_json_response res, err, data
