@@ -185,8 +185,10 @@ class Yabby
 
         callback null, comments
 
-  remove_comment: (comment, callback) ->
+  del_comment: (comment, callback) ->
     Comment.findOneAndRemove comment, (err, comment) ->
+      return callback err if err
+      return callback 'the comment is not exists' unless comment
       async.parallel [
         (next) ->
           User.findOneAndUpdate {user_id: comment.user_id}, {$inc: {comment_count: -1}}, next
