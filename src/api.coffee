@@ -140,7 +140,7 @@ module.exports = (app, yabby) ->
       yabby.avatar_upload files.file, req.user.user_id, (err, data) ->
         send_json_response res, err, data
 
-  app.get "#{api_prefix}/channel/:urlname_or_channel_id", (req, res) ->
+  app.get "#{api_prefix}/channel/:urlname_or_channel_id/tweets", (req, res) ->
     urlname_or_channel_id = req.params.urlname_or_channel_id
     page = req.query.page
     page = if page then Number(page) else 0
