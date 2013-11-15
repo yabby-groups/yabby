@@ -382,6 +382,11 @@ class Yabby
         chan = new Channel channel
         chan.save callback
 
+  del_channel: (channel, callback) ->
+    Channel.findOneAndRemove channel, (err, chan) ->
+      ChannelTweet.remove {channel_id: chan.channel_id}, (err) ->
+        callback err
+
   get_channel_tweets: (query, options, callback) ->
     self = @
     Channel.findOne query, (err, channel) ->
