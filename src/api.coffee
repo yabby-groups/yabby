@@ -183,3 +183,13 @@ module.exports = (app, yabby) ->
     channel = req.body
     yabby.save_channel channel, (err, data) ->
       send_json_response res, err, data
+
+  app.delete "#{api_prefix}/channel/:urlname_or_channel_id", require_admin(), (req, res) ->
+    urlname_or_channel_id = req.params.urlname_or_channel_id
+    channel = {}
+    if /^\d+$/.exec(urlname_or_channel_id)
+      channel.channel_id = Number(urlname_or_channel_id)
+    else
+      channel.urlname = urlname_or_channel_id
+    yabby.del_channel channel, (err, data) ->
+      send_json_response res, err, data
