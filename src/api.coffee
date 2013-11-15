@@ -31,6 +31,12 @@ module.exports = (app, yabby) ->
     yabby.get_tweet tweet_id, (err, data) ->
       send_json_response res, err, data
 
+  app.delete "#{api_prefix}/tweets/:tweet_id", require_login(), (req, res) ->
+    tweet_id = req.params.tweet_id
+    user_id = req.user.user_id
+    yabby.del_tweet {tweet_id: tweet_id, user_id: user_id}, (err, data) ->
+      send_json_response res, err, data
+
   app.get "#{api_prefix}/tweets", (req, res) ->
     page = req.query.page
     page = if page then parseInt(page) else 0
