@@ -416,11 +416,8 @@ class Yabby
         _ctweet.save (err, _ctweet) ->
           callback err
 
-  remove_channel_tweet: (ctweet, callback) ->
-    ChannelTweet.findOne ctweet, (err, _ctweet) ->
-      return callback 'ChannelTweet not found' unless _ctweet
-      ctweet.remove (err) ->
-        callback err
+  del_channel_tweet: (ctweet, callback) ->
+    ChannelTweet.remove ctweet, callback
 
   unread: (query, callback) ->
     return callback 'seq not found' unless query.seq
