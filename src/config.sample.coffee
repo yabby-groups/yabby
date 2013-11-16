@@ -6,3 +6,19 @@ module.exports =
     username: 'your username'
     passwd:'your passwd'
     bucket: 'your bucket'
+  services:
+    tqq:
+      appkey: "your appkey"
+      secret: "your secret"
+    weibo:
+      appkey: "your appkey"
+      secret: "your secret"
+    qzone:
+      appkey: "your appkey"
+      secret: "your secret"
+    renren:
+      appkey: "your appkey"
+      secret: "your secret"
+    douban:
+      appkey: "your appkey"
+      secret: "your secret"
