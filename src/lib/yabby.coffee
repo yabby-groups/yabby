@@ -16,7 +16,6 @@ hashed_password = (raw_password) ->
 
 class Yabby
   constructor: (@config) ->
-    mongoose.connect @config.mongod
     @upyun = UPYun @config.upyun.bucket, @config.upyun.username, @config.upyun.passwd
 
   create_user: (user, callback) ->

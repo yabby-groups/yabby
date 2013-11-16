@@ -1,4 +1,6 @@
 mongoose = require 'mongoose'
+{mongod} = require '../config'
+mongoose.connect mongod
 Schema = mongoose.Schema
 autoIncrement = require 'mongoose-auto-increment'
 autoIncrement.initialize mongoose.connection
