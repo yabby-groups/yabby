@@ -89,6 +89,13 @@ Sequence = new Schema
   name: {type: String, index: {unique: true}}
   id: {type: Number, default: 0}
 
+Binding = new Schema
+  user_id: {type: String, index: true}
+  type: {type: String, index: true}
+  token: {type: String, index: {unique: true}}
+  raw: String
+  next_time: Date
+
 exports.User = mongoose.model 'User', User
 exports.Passwd = mongoose.model 'Passwd', Passwd
 exports.OauthToken = mongoose.model 'OauthToken', OauthToken
@@ -108,3 +115,5 @@ exports.Sequence.next = (name, callback) ->
     seq = new exports.Sequence {name: name}
     seq.save (err, seq) ->
       callback seq.id
+
+exports.Binding = mongoose.model 'Binding', Binding
