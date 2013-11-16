@@ -48,7 +48,6 @@ exports.callback = (req, res)->
   method = 'post'
   code = req.query.code
   type = req.params.type
-  key = req.params.key
   if type is 'weibo'
     url = 'https://api.weibo.com/oauth2/access_token?' + qs.stringify {
       client_id: services.weibo.appkey
@@ -89,14 +88,16 @@ exports.callback = (req, res)->
     method: method
     'content-type': 'application/x-www-form-urlencoded'
     form: body
-  }, (err, response, body)->
+  }, (err, resp, body)->
     return res.json error: err if err
     try
       if type is 'qzone'
         rsp = qs.parse body
       else
         rsp = JSON.parse body
-      OauthToken.findOne {type: type, key: key}, (err, token)->
+
+      user = req.user
+      Binding.findOne {type: type, user_id: user.user_id}, (err, token)->
         next_time = Number(rsp.expires_in) * 1000 + Date.now()
         if token
           token.token = rsp.access_token
@@ -108,7 +109,7 @@ exports.callback = (req, res)->
             raw: body
             type: type
             next_time: next_time
-            key: key
+            user_id: user.user_id
           }
         token.save -> res.json rsp
     catch e
