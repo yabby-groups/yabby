@@ -95,8 +95,16 @@ Binding = new Schema
   user_id: {type: String, index: true}
   type: {type: String, index: true}
   token: {type: String, index: {unique: true}}
-  raw: String
-  next_time: Date
+  token_raw: String
+  expire_at: Date # this is for token expireat
+  uid: {type: String, index: true} # 第三方的用户 ID
+  domain: String # 用户个人主页
+  username: String # 第三方绑定帐号
+  nickname: String #昵称
+  urlname: String
+  sex: String # 性别
+  raw: String # the raw user info
+  created_at: {type: Date, default: Date.now}
 
 exports.User = mongoose.model 'User', User
 exports.Passwd = mongoose.model 'Passwd', Passwd
