@@ -46,7 +46,7 @@ if 'development' is app.get('env')
   app.use express.errorHandler()
 
 require('./api')(app, yabby)
-require('./lib/oauth')(app)
+require('./lib/oauth')(app, yabby)
 
 http.createServer(app).listen app.get('port'), () ->
   console.log "Express server listening on port #{app.get('port')}"
