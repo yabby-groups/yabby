@@ -156,8 +156,26 @@ module.exports = (app, yabby) ->
         req.session.user = result unless result.err
         res.json result
 
+  binding = (req, res) ->
+    token = req.session.token
+    delete req.session.token
+    type = token.type
+    token = token.token
+    async.waterfall [
+      (next) ->
+        if type is 'weibo'
+          weibo_binding user, token, next
+        else
+          next 'not support'
+      (data, next) ->
+        return next null, data if data.err
+        yabby.get_user data.user_id, next
+    ], (err, result) ->
       if err
+          res.json {err: 401, msg: err}
       else
+        req.session.user = result unless result.err
+        res.json result
 
 weibo_signin = (token, callback) ->
   type = 'weibo'
@@ -207,4 +225,40 @@ weibo_signup = (token, callback) ->
   bind.token = token.access_token
   bind.expire_at = Number(token.expires_in)*1000 + new Date()
   bind.token_raw = token
+  bind.save callback
+
+weibo_binding = (user, token, callback) ->
+  type = 'weibo'
+  Binding.findOne {type: type, uid: binding.uid}, (err, bind) ->
     return callback err if err
+    if bind
+      return weibo_signup token, callback if bind.user_id is user.user_id
+      return callback null, {err: 401, msg: 'your are already bind on other user', \
+        user_id: bind.user_id}
+    url = 'https://api.weibo.com/2/users/show.json?' + qs.stringify({
+      access_token: token.access_token
+      uid: token.uid
+    })
+    minreq url, (err, resp, body) ->
+      return callback err if err
+      try
+        rsp = JSON.parse body
+        return callback rsp.err if rsp.err
+        delete rsp.status
+        binding = {}
+        binding.nickname = rsp.screen_name
+        binding.sex = rsp.sex
+        binding.domain = rsp.domain
+        binding.token = token.access_token
+        binding.raw = rsp
+        binding.token_raw = token
+        binding.uid = token.uid
+        binding.expire_at = Number(token.expires_in)*1000 + new Date()
+        binding.username = rsp.name
+        binding.type = type
+        binding.user_id = user.user_id
+        bind = new Binding binding
+        bind.save (err, bind) ->
+          callback err, user
+      catch e
+        callback e
