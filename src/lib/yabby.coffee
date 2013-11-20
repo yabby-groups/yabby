@@ -1,6 +1,6 @@
 mongoose = require 'mongoose'
 {User, Passwd, OauthToken, Tweet, Comment, File, Like, CommentLike, Favorite,
-  Channel, ChannelTweet, Sequence, UserView} = require './models'
+  Channel, ChannelTweet, Sequence, UserView, Binding} = require './models'
 async = require 'async'
 crypto = require 'crypto'
 urlparse = require('url').parse
@@ -53,7 +53,11 @@ class Yabby
       return callback 'User not found' unless user
       user = user.toJSON()
       user.avatar = JSON.parse(user.avatar) if user.avatar
-      callback null, user
+      Binding.find user_id: user.user_id, 'type, uid', (err, binds) ->
+        if binds
+          user.binding = for bind in binds
+            bind.toJSON()
+        callback null, user
 
   create_tweet: (tweet, callback) ->
     if not tweet.text or tweet.text.length > 150
