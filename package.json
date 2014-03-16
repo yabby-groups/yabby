@@ -14,5 +14,11 @@
     , "upyun": "*"
     , "uuid": "*"
     , "minreq": "*"
+    , "body-parser": "*"
+    , "cookie-parser": "*"
+    , "errorhandler": "*"
+    , "express-session": "*"
+    , "method-override": "*"
+    , "static-favicon": "*"
   }
 }

@@ -4,9 +4,15 @@
 express = require 'express'
 http = require 'http'
 path = require 'path'
+bodyParser = require 'body-parser'
+methodOverride = require 'method-override'
+cookieParser = require 'cookie-parser'
+session = require 'express-session'
+errorHandler = require 'errorhandler'
+favicon = require 'static-favicon'
 
 Yabby = require './lib/yabby'
-MongoStore = require('connect-mongo')(express)
+MongoStore = require('connect-mongo')(session)
 
 config = require './config'
 
@@ -19,18 +25,18 @@ app.set 'port', config.port or process.env.PORT or 3000
 app.set 'host', config.host or process.env.HOST or '127.0.0.1'
 app.set 'views', path.join(__dirname, 'views')
 app.set 'view engine', 'jade'
-app.use express.favicon()
-app.use express.logger('dev')
-app.use express.urlencoded()
-app.use express.json()
-app.use express.methodOverride()
-app.use express.cookieParser()
-app.use express.session {
+app.use favicon()
+# app.use express.logger('dev')
+app.use bodyParser.urlencoded()
+app.use bodyParser.json()
+app.use methodOverride()
+app.use cookieParser()
+app.use session {
   secret: config.cookie_secret,
   store: new MongoStore({url: config.mongod})
 }
 app.use yabby.auth()
-app.use app.router
+# app.use app.router
 app.use express.static(path.join(__dirname, 'public'))
 
 # app.all '*', (req, res, next) ->
@@ -43,7 +49,7 @@ app.use express.static(path.join(__dirname, 'public'))
 
 # development only
 if 'development' is app.get('env')
-  app.use express.errorHandler()
+  app.use errorHandler()
 
 require('./api')(app, yabby)
 require('./lib/oauth')(app, yabby)

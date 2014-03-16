@@ -5,12 +5,6 @@ minreq = require 'minreq'
 redirect_uri = "http://#{host}/oauth/callback/"
 
 module.exports = (app, yabby) ->
-  app.get '/oauth/:type', oauth
-  app.get '/oauth/callback/:type', callback
-  app.get '/signin', signin
-  app.get '/signup', signup
-  app.get '/bind', yabby.require_login(), signup
-
   oauth = (req, res)->
     type = req.params.type
     next = req.query.next or '/signup'
@@ -262,3 +256,9 @@ weibo_binding = (user, token, callback) ->
           callback err, user
       catch e
         callback e
+
+  app.get '/oauth/:type', oauth
+  app.get '/oauth/callback/:type', callback
+  app.get '/signin', signin
+  app.get '/signup', signup
+  app.get '/bind', yabby.require_login(), signup
