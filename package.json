@@ -19,6 +19,6 @@
     , "errorhandler": "*"
     , "express-session": "*"
     , "method-override": "*"
-    , "static-favicon": "*"
+    , "serve-favicon": "*"
   }
 }

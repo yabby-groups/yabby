@@ -9,7 +9,7 @@ methodOverride = require 'method-override'
 cookieParser = require 'cookie-parser'
 session = require 'express-session'
 errorHandler = require 'errorhandler'
-favicon = require 'static-favicon'
+favicon = require 'serve-favicon'
 
 Yabby = require './lib/yabby'
 MongoStore = require('connect-mongo')(session)
@@ -25,7 +25,7 @@ app.set 'port', config.port or process.env.PORT or 3000
 app.set 'host', config.host or process.env.HOST or '127.0.0.1'
 app.set 'views', path.join(__dirname, 'views')
 app.set 'view engine', 'jade'
-app.use favicon()
+app.use favicon(__dirname + '/public/favicon.ico')
 # app.use express.logger('dev')
 app.use bodyParser.urlencoded()
 app.use bodyParser.json()
