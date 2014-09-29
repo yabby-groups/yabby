@@ -146,7 +146,7 @@ launch = (cmd, options=[], callback) ->
     if status is 0
       callback()
     else
-      process.exit(status);
+      process.exit(status)
 
 # ## *build*
 #
