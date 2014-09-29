@@ -1,0 +1,46 @@
+doctype html
+html(lang='zh-CN')
+  head
+    meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
+    meta(charset='UTF-8')
+    title &#x82B1;&#x82DE;&#x513F;
+    link(rel='profile', href='http://gmpg.org/xfn/11')
+    meta(name='keywords', content='')
+    meta(name='description', content='')
+    link(rel='stylesheet', type='text/css', media='all', href='static/style.css')
+    link(rel='shortcut icon', href='#')
+    link(rel='stylesheet', href='static/pagenavi-css.css', type='text/css', media='all')
+    script(src='http://fb.me/react-0.11.2.js')
+    script(src='http://code.jquery.com/jquery-2.1.0.min.js')
+  body
+    header#branding(role='banner')
+      hgroup#logo
+        h1#site-title
+          a(href='http://huabot.com/', title='花苞儿', rel='home') &#x82B1;&#x82DE;&#x513F;
+        // <h5 id="site-description"></h5>
+      nav#access(role='navigation')
+        ul.topmenu
+          li.menu-item.menu-item-type-custom.menu-item-object-custom
+            a(href='http://huabot.com/') &#x9996;&#x9875;
+      // #access
+    // #branding
+    .split
+    section#main
+      #content(role='main')
+      #sidebar.widget-area(role='complementary')
+        aside.widget.clearfix.widget_search
+          h3.widget-title &#x7AD9;&#x5185;&#x641C;&#x56FE;
+          form#searchform(method='get', action='http://huabot.com/')
+            input#s(type='text', name='s', placeholder='搜索...')
+            input#searchsubmit(type='submit', name='submit', value='搜索')
+    // #main
+    footer#colophon(role='contentinfo')
+      | &copy; 2007-2014
+      a(href='http://huabot.com/', rel='home') &#x82B1;&#x82DE;&#x513F;
+      span.sep
+      a(target='_blank', href='http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=-4mWkZyakZOalr_Jlo-Rjo7RnJCS', style='text-decoration:none;') &#x8054;&#x7CFB;&#x6211;&#x4EEC;
+      span.sep
+      |             &#x672C;&#x7AD9;&#x5185;&#x5BB9;&#x5747;&#x6765;&#x81EA;&#x4E92;&#x8054;&#x7F51;&#xFF0C;&#x5982;&#x6709;&#x4FB5;&#x6743;&#x8BF7;&#x4E0E;&#x6211;&#x4EEC;&#x8054;&#x7CFB;&#x3002;
+    // #colophon
+
+    script(src='/static/js/main.js')
