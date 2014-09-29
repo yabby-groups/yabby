@@ -27,12 +27,14 @@ app.set 'views', path.join(__dirname, 'views')
 app.set 'view engine', 'jade'
 app.use favicon(__dirname + '/public/favicon.ico')
 # app.use express.logger('dev')
-app.use bodyParser.urlencoded()
+app.use bodyParser.urlencoded({ extended: false  })
 app.use bodyParser.json()
 app.use methodOverride()
 app.use cookieParser()
 app.use session {
   secret: config.cookie_secret,
+  resave: true,
+  saveUninitialized: true,
   store: new MongoStore({url: config.mongod})
 }
 app.use yabby.auth()
