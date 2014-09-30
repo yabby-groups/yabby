@@ -1,5 +1,5 @@
 {User, Passwd, OauthToken, Tweet, Comment, File, Like, CommentLike, Favorite,
-  Channel, ChannelTweet, Sequence, UserView, Binding} = require './models'
+  Channel, ChannelTweet, Sequence, UserView, Binding} = require './lib/models'
 
 async = require 'async'
 
