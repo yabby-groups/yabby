@@ -19,7 +19,7 @@ html(lang='zh-CN')
         host: '#{host}'
       };
   body
-    header(role='banner')
+    header#branding(role='banner')
       hgroup#logo
         h1#site-title
           a(href='#{host}', title='花苞儿', rel='home') 花苞儿
@@ -29,7 +29,7 @@ html(lang='zh-CN')
           li.menu-item.menu-item-type-custom.menu-item-object-custom
             a(href='#{host}') 首页
     .split
-    section
+    section#main
       #content(role='main')
       #sidebar.widget-area(role='complementary')
         aside.widget.clearfix.widget_search
