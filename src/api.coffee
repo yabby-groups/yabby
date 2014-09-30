@@ -13,7 +13,7 @@ module.exports = (app, yabby) ->
       res.json data
 
   app.get "#{api_prefix}/users/me", require_login(), (req, res) ->
-    send_json_response res, null, req.user
+    send_json_response res, null, user: req.user
 
   app.post "#{api_prefix}/users/register", (req, res) ->
     user = req.body
@@ -24,18 +24,18 @@ module.exports = (app, yabby) ->
     tweet = req.body
     tweet.user_id = req.user.user_id
     yabby.create_tweet tweet, (err, data) ->
-      send_json_response res, err, data
+      send_json_response res, err, tweet: data
 
   app.get "#{api_prefix}/tweets/:tweet_id", (req, res) ->
     tweet_id = req.params.tweet_id
     yabby.get_tweet tweet_id, (err, data) ->
-      send_json_response res, err, data
+      send_json_response res, err, tweet: data
 
   app.delete "#{api_prefix}/tweets/:tweet_id", require_login(), (req, res) ->
     tweet_id = req.params.tweet_id
     user_id = req.user.user_id
     yabby.del_tweet {tweet_id: tweet_id, user_id: user_id}, (err, data) ->
-      send_json_response res, err, data
+      send_json_response res, err, tweet: data
 
   app.get "#{api_prefix}/tweets", (req, res) ->
     page = req.query.page
@@ -46,7 +46,7 @@ module.exports = (app, yabby) ->
     skip = page * limit
     yabby.get_tweets null, {skip: skip, limit: limit, sort: {tweet_id: -1}}, (err, data) ->
       data = data or {}
-      send_json_response res, err, data
+      send_json_response res, err, tweets: data
 
   app.get "#{api_prefix}/users/:user_id/tweets", (req, res) ->
     user_id = req.params.user_id
@@ -58,7 +58,7 @@ module.exports = (app, yabby) ->
     skip = page * limit
     yabby.get_tweets {user_id: user_id}, {skip: skip, limit: limit, sort: {tweet_id: -1}}, (err, data) ->
       data = data or {}
-      send_json_response res, err, data
+      send_json_response res, err, tweets: data
 
   app.get "#{api_prefix}/tweets/:tweet_id/comments", (req, res) ->
     tweet_id = req.params.tweet_id
@@ -69,7 +69,7 @@ module.exports = (app, yabby) ->
     limit = 50 if limit > 50
     skip = page * limit
     yabby.get_comments tweet_id: tweet_id, {skip: skip, limit: limit, sort: {comment_id: -1}}, (err, data) ->
-      send_json_response res, err, data
+      send_json_response res, err, comments: data
 
   app.post "#{api_prefix}/tweets/:tweet_id/comments", require_login(), (req, res) ->
     tweet_id = req.params.tweet_id
@@ -122,7 +122,7 @@ module.exports = (app, yabby) ->
     skip = page * limit
     yabby.get_favorites {user_id: user_id}, {skip: skip, limit: limit, sort: {tweet_id: -1}}, (err, data) ->
       data = data or {}
-      send_json_response res, err, data
+      send_json_response res, err, tweets: data
 
   app.post "#{api_prefix}/upload", require_login(), (req, res) ->
     form = new formidable.IncomingForm()
@@ -130,7 +130,7 @@ module.exports = (app, yabby) ->
     form.parse req, (err,fields, files) ->
       return send_json_response res, 'please choose a file' unless files.file
       yabby.upload files.file, 'tweet', (err, data) ->
-        send_json_response res, err, data
+        send_json_response res, err, file: data
 
   app.post "#{api_prefix}/avatar_upload", require_login(), (req, res) ->
     form = new formidable.IncomingForm()
@@ -138,7 +138,7 @@ module.exports = (app, yabby) ->
     form.parse req, (err,fields, files) ->
       return send_json_response res, 'please choose file' unless files.file
       yabby.avatar_upload files.file, req.user.user_id, (err, data) ->
-        send_json_response res, err, data
+        send_json_response res, err, file: data
 
   app.get "#{api_prefix}/channel/:urlname_or_channel_id/tweets", (req, res) ->
     urlname_or_channel_id = req.params.urlname_or_channel_id
@@ -156,7 +156,7 @@ module.exports = (app, yabby) ->
       query.urlname = urlname_or_channel_id
 
     yabby.get_channel_tweets query, options, (err, ctweets) ->
-      send_json_response res, err, ctweets
+      send_json_response res, err, tweets: ctweets
 
   app.get "#{api_prefix}/unread", (req, res) ->
     yabby.unread req.query, (err, count) ->

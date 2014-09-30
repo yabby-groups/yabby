@@ -128,7 +128,7 @@ var TweetBox = React.createClass({
     loadTweetsFromServer: function() {
         var self = this;
         $.get('/api/tweets', function(data) {
-            self.setState({tweets: data});
+            self.setState(data);
         });
     },
     getInitialState: function() {
