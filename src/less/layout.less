@@ -1,0 +1,53 @@
+/*
+============================== Layout
+*/
+body {
+    background: #f7f7f7 url(images/bg.png) repeat-x;
+    background: -webkit-linear-gradient(top,#fff,#eee 90px,#f7f7f7 370px) no-repeat;
+    background: -moz-linear-gradient(top,#fff,#eee 90px,#f7f7f7 370px) no-repeat;
+    background: -ms-linear-gradient(top,#fff,#eee 90px,#f7f7f7 370px) no-repeat;
+    background: -o-linear-gradient(top,#fff,#eee 90px,#f7f7f7 370px) no-repeat;
+    background: linear-gradient(top,#fff,#eee 90px,#f7f7f7 370px) no-repeat;
+    border-top: 3px solid #000;
+    -webkit-text-size-adjust: none;
+}
+
+header, section {
+    width: 960px;
+    padding: 0 10px;
+    margin: 0 auto;
+    clear: both;
+}
+
+header {
+    height: 90px;
+    position: relative;
+}
+
+section {
+    margin: 20px auto;
+}
+
+#content {
+    float: left;
+    width: 720px;
+    margin-bottom: 30px;
+}
+
+#sidebar {
+    width: 220px;
+    float: right;
+    margin-bottom: 30px;
+}
+
+.clearfix {
+    zoom: 1;
+    &:after {
+        visibility: hidden;
+        display: block;
+        font-size: 0;
+        content: "";
+        clear: both;
+        height:0;
+    }
+}

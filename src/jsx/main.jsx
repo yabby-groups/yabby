@@ -22,11 +22,11 @@ var Pagenavi = React.createClass({
         }
 
         if (current == 2) {
-            html.push(<a className="previouspostslink" href="/">«</a>);
+            html.push(<a className="prev" href="/">«</a>);
         }
 
         if (current > 2) {
-            html.push(<a className="previouspostslink" href={'/p/' + (current - 1)}>«</a>);
+            html.push(<a className="prev" href={'/p/' + (current - 1)}>«</a>);
         }
 
         if (current > 3) {
@@ -59,7 +59,7 @@ var Pagenavi = React.createClass({
         }
 
         if (current < total_page) {
-            html.push(<a className="nextpostslink" href={"/p/" + total_page}>»</a>);
+            html.push(<a className="next" href={"/p/" + total_page}>»</a>);
         }
 
         if (end < total_page) {
@@ -67,7 +67,7 @@ var Pagenavi = React.createClass({
         }
 
         return (
-            <div className="wp-pagenavi">
+            <div className="pagenavi">
                 <span className="pages">{'第' + current + '页，共' + total_page + ' 页'}</span>
                 {html}
             </div>
@@ -87,7 +87,7 @@ var TweetItem = React.createClass({
         }
 
         return (
-            <article className="post type-post status-publish format-standard hentry">
+            <article className="tweetItem">
                 <header className="entry-header">
                     <h3 className="entry-title">
                         <a href={"/users/" + user.user_id} title={user.username}>{user.username}</a>
