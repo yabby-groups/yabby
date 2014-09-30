@@ -20,6 +20,9 @@ yabby = new Yabby(config)
 
 app = express()
 
+app.locals.host = config.host
+app.locals.img_host = config.img_host
+
 # all environments
 app.set 'port', config.port or process.env.PORT or 3000
 app.set 'host', config.host or process.env.HOST or '127.0.0.1'

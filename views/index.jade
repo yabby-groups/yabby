@@ -10,30 +10,38 @@ html(lang='zh-CN')
     link(rel='shortcut icon', href='#')
     script(src='http://fb.me/react-0.11.2.js')
     script(src='http://code.jquery.com/jquery-2.1.0.min.js')
+    script.
+      var config = {
+        current: #{current},
+        total: #{total},
+        path: '#{path}',
+        img_host: '#{img_host}',
+        host: '#{host}'
+      };
   body
     header(role='banner')
       hgroup#logo
         h1#site-title
-          a(href='http://huabot.com/', title='花苞儿', rel='home') 花苞儿
+          a(href='#{host}', title='花苞儿', rel='home') 花苞儿
         // h5#site-description
       nav(role='navigation')
         ul.topmenu
           li.menu-item.menu-item-type-custom.menu-item-object-custom
-            a(href='http://huabot.com/') &#x9996;&#x9875;
+            a(href='#{host}') 首页
     .split
     section
       #content(role='main')
       #sidebar.widget-area(role='complementary')
         aside.widget.clearfix.widget_search
           h3.widget-title &#x7AD9;&#x5185;&#x641C;&#x56FE;
-          form#searchform(method='get', action='http://huabot.com/')
+          form#searchform(method='get', action='#')
             input#s(type='text', name='s', placeholder='搜索...')
             input#searchsubmit(type='submit', name='submit', value='搜索')
     footer(role='contentinfo')
       | &copy; 2007-2014 &nbsp;
-      a(href='http://huabot.com/', rel='home') 花苞儿
+      a(href='#{host}', rel='home') 花苞儿
       span.sep
-      a(target='_blank', href='http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=-4mWkZyakZOalr_Jlo-Rjo7RnJCS', style='text-decoration:none;') 联系我们
+      a(target='_blank', href='#') 联系我们
       span.sep
       | 本站内容均来自互联网，如有侵权请与我们联系。
 

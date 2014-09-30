@@ -1,9 +1,13 @@
 /** @jsx React.DOM */
 
+if (!config) {
+  var config = {};
+}
+
 var FileItem = React.createClass({
   render: function() {
     var file = this.props.file || {};
-    return <img src={'http://huabot.b0.upaiyun.com/tweet/' + file.file_key} />;
+    return <img src={config.img_host + '/' + file.file_bucket + '/' + file.file_key} />;
   }
 });
 
@@ -127,12 +131,12 @@ var TweetList = React.createClass({
 var TweetBox = React.createClass({
   loadTweetsFromServer: function() {
     var self = this;
-    $.get('/api/tweets', function(data) {
+    $.get(config.path, function(data) {
       self.setState(data);
     });
   },
   getInitialState: function() {
-    return {tweets: [], current: 1, total: 1};
+    return {tweets: [], current: config.current, total: config.total};
   },
   componentDidMount: function() {
     this.loadTweetsFromServer();

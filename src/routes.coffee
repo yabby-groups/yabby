@@ -8,4 +8,9 @@ module.exports = (app, yabby) ->
   require_admin = yabby.require_admin
 
   app.get '/', (req, res) ->
-    res.render 'index'
+    Tweet.count (err, total) ->
+      res.render 'index', {
+        current: 1
+        total: total
+        path: '/api/tweets/'
+      }
