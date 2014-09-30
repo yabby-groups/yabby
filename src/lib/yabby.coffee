@@ -17,7 +17,7 @@ hashed_password = (raw_password) ->
 class Yabby
   constructor: (@config) ->
     @upyun = UPYun @config.upyun.bucket, @config.upyun.username, @config.upyun.passwd
-    UPYun.endpoint.setEndpoint(UPYun.endpoint.ENDPOINT_V1);
+    UPYun.endpoint.setEndpoint UPYun.endpoint.ENDPOINT_V1
 
   create_user: (user, callback) ->
     self = @
