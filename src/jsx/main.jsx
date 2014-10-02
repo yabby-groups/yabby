@@ -140,6 +140,11 @@ var TweetItem = React.createClass({
           <span className="like" onClick={this.handleLike}>{this.state.like_count}</span>
           <span className="unlike" onClick={this.handleUnLike}>{this.state.unlike_count}</span>
           <span className={this.state.favorite} onClick={this.handleFavorite}></span>
+          <div className="right">
+            <a href={"/tweets/" + tweet.tweet_id}>
+              <span className="comment">{tweet.comment_count}</span>
+            </a>
+          </div>
         </div>
       </article>
     );

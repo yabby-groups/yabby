@@ -214,6 +214,7 @@ article {
   }
   .entry-status {
     margin: 10px 0;
+    position: relative;
     span {
       border: 1px solid #bbb;
       -webkit-border-radius: 3px;
@@ -239,6 +240,30 @@ article {
       &.unfav {
         background: #ffffff url(images/no_bookmark.png) no-repeat 10px 4px;
       }
+      &.comment {
+        background: #ffffff url(images/comment.png) no-repeat 6px 4px;
+      }
+    }
+    .right {
+      right: -20px;
+      top: 0;
+      position: absolute;
+      a {
+        text-decoration: none;
+        color: #333;
+        -webkit-transition: color .2s;
+        -moz-transition: color .2s;
+        -ms-transition: color .2s;
+        -o-transition: color .2s;
+        transition: color .2s;
+        &:hover {
+          text-decoration: none;
+        }
+        &:hover, &:active {
+          color: #333;
+        }
+      }
+
     }
   }
 }
