@@ -17,7 +17,8 @@ html(lang='zh-CN')
         limit: #{limit},
         path: '#{path}',
         img_host: '#{img_host}',
-        host: '#{host}'
+        host: '#{host}',
+        user: '#{user}'
       };
   body
     header#branding(role='banner')
@@ -29,6 +30,7 @@ html(lang='zh-CN')
         ul.topmenu
           li.menu-item.menu-item-type-custom.menu-item-object-custom
             a(href='#{host}') 首页
+      #info
     .split
     section#main
       #content(role='main')

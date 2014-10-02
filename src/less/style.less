@@ -10,6 +10,23 @@
   background: linear-gradient(bottom,#eee 0%,#fff 40px);
 }
 
+.input_box() {
+  width: 183px;
+  height: 12px;
+  line-height: 12px;
+  border: 1px solid #bbb;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-box-shadow: inset 1px 1px 0 #eee,0 1px 0 #fff;
+  -moz-box-shadow: inset 1px 1px 0 #eee,0 1px 0 #fff;
+  box-shadow: inset 1px 1px 0 #eee,0 1px 0 #fff;
+  padding: 9px 30px 9px 5px;
+  &:focus {
+    border-color: #aaa;
+  }
+}
+
 .pagenavi {
   text-align: center;
   clear: both;
@@ -199,6 +216,7 @@ article {
 
 
 header {
+  position: relative;
   #logo {
     float: left;
     margin-top: 12px;
@@ -250,6 +268,34 @@ header {
           border-radius: 3px;
           margin: 0;
         }
+      }
+    }
+  }
+  #info {
+    display: inline-block;
+    position: absolute;
+    top: 31px;
+    right: 5px;
+    input {
+      margin-left: 5px;
+      &[type=text], &[type=password] {
+        .input_box();
+        width: 100px;
+      }
+      &[type=submit] {
+        width: 34px;
+        height: 30px;
+        border: 1px solid #bbb;
+        top: 2px;
+        right: 2px;
+        cursor: pointer;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        -webkit-box-shadow: inset 1px 1px 0 #eee,0 1px 0 #fff;
+        -moz-box-shadow: inset 1px 1px 0 #eee,0 1px 0 #fff;
+        box-shadow: inset 1px 1px 0 #eee,0 1px 0 #fff;
+        background: #E2E1E1;
       }
     }
   }
@@ -331,20 +377,7 @@ aside{
   #searchform {
     position: relative;
     #s {
-      width: 183px;
-      height: 12px;
-      line-height: 12px\9;
-      border: 1px solid #bbb;
-      -webkit-border-radius: 3px;
-      -moz-border-radius: 3px;
-      border-radius: 3px;
-      -webkit-box-shadow: inset 1px 1px 0 #eee,0 1px 0 #fff;
-      -moz-box-shadow: inset 1px 1px 0 #eee,0 1px 0 #fff;
-      box-shadow: inset 1px 1px 0 #eee,0 1px 0 #fff;
-      padding: 9px 30px 9px 5px;
-      &:focus {
-        border-color: #aaa;
-      }
+      .input_box();
     }
     #searchsubmit {
       background: #fff url(images/sprite.gif) no-repeat 7px 7px;

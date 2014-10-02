@@ -156,3 +156,67 @@ React.renderComponent(
   <TweetBox />,
   document.querySelector("#content")
 );
+
+
+var LoginForm = React.createClass({
+  handleSubmit: function(e) {
+    e.preventDefault();
+    var username = this.refs.username.getDOMNode().value.trim();
+    var passwd = this.refs.passwd.getDOMNode().value.trim();
+    if (!passwd || !username) {
+      return;
+    }
+    this.props.onLoginSubmit({passwd: passwd, username: username});
+    this.refs.username.getDOMNode().value = '';
+    this.refs.passwd.getDOMNode().value = '';
+    return;
+  },
+  render: function() {
+    return (
+      <form className="loginForm" onSubmit={this.handleSubmit}>
+        <input type="text" placeholder="username" ref="username" />
+        <input type="password" placeholder="password" ref="passwd" />
+        <input type="submit" value="登录" />
+      </form>
+    )
+  }
+});
+
+
+var InfoBox = React.createClass({
+  handleLogin: function(info) {
+    var self = this;
+    $.post('/auth', info, function(data) {
+      self.setState(data);
+    });
+  },
+  loadUserInfo: function() {
+    var self = this;
+    $.get('/api/users/me', function(data) {
+      self.setState(data);
+    });
+  },
+  getInitialState: function() {
+    if (config.user) {
+      return {user: JSON.parse(config.user.replace(/&quot;/g, '"'))};
+    }
+    return {user: null};
+  },
+  componentDidMount: function() {
+    if (!config.user) {
+      this.loadUserInfo();
+    }
+  },
+  render: function() {
+    if (!this.state.user) {
+      return <LoginForm onLoginSubmit={this.handleLogin} />
+    }
+    return <a href="/logout">{this.state.user.username}</a>
+  }
+});
+
+
+React.renderComponent(
+  <InfoBox />,
+  document.querySelector("#info")
+);
