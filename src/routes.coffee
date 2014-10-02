@@ -1,18 +1,9 @@
 {User, Passwd, OauthToken, Tweet, Comment, File, Like, CommentLike, Favorite,
   Channel, ChannelTweet, Sequence, UserView, Binding} = require './lib/models'
 
+{clean_obj} = require './lib/util'
+
 async = require 'async'
-
-util = require 'underscore'
-
-omit = (data) ->
-  return util.omit data, ["__v", "_id", "passwd", "email"]
-
-clean_obj = (obj) ->
-  obj = omit obj
-  obj.file = omit obj.file if obj.file
-  obj.user = clean_obj obj.user if obj.user
-  return obj
 
 
 module.exports = (app, yabby) ->

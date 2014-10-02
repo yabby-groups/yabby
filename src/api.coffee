@@ -1,27 +1,6 @@
 api_prefix = require("./config").api_prefix
 formidable = require 'formidable'
-util = require 'underscore'
-
-omit = (data) ->
-  return util.omit data, ["__v", "_id", "passwd", "email"]
-
-clean_obj = (obj) ->
-  obj = omit obj
-  obj.file = omit obj.file if obj.file
-  obj.user = clean_obj obj.user if obj.user
-  return obj
-
-clean = (data) ->
-  keys = util.keys(data)
-  for key in keys
-    if key in ["user", "tweet"]
-      data[key] = clean_obj data[key]
-    if key in ["users", "tweets"]
-      data[key] = util.map data[key], (obj) ->
-        obj = clean_obj obj
-        return obj
-
-  return data
+{clean_obj} = require './lib/util'
 
 
 send_json_response = (res, err, data) ->
@@ -29,7 +8,7 @@ send_json_response = (res, err, data) ->
     res.json {err: 401, msg: err}
   else
     data = {} unless data
-    res.json clean(data)
+    res.json clean_obj(data)
 
 
 module.exports = (app, yabby) ->
