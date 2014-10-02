@@ -204,7 +204,7 @@ var InfoBox = React.createClass({
   },
   componentDidMount: function() {
     if (!config.user) {
-      this.loadUserInfo();
+      // this.loadUserInfo();
     }
   },
   render: function() {
