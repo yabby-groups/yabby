@@ -4,7 +4,7 @@ mongoose = require 'mongoose'
 async = require 'async'
 crypto = require 'crypto'
 urlparse = require('url').parse
-util = require 'underscore'
+_ = require 'underscore'
 fs = require 'fs'
 uuid = require('uuid').v4
 UPYun = require 'upyun'
@@ -256,7 +256,7 @@ class Yabby
         next()
       else if req.session and req.session.user
         res.header 'P3P', "CP=\"CURa ADMa DEVa PSAo PSDoOUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP  COR\""
-        req.user = util.clone req.session.user
+        req.user = _.clone req.session.user
         next()
       else if token
         OauthToken.findOne {access_token: token}, (err, token) ->
