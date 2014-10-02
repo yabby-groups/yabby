@@ -210,24 +210,19 @@ class Yabby
           if _like.is_like and not like.is_like
             _like.remove (err) ->
               return callback 'you cant like it' if err
-              Tweet.findOneAndUpdate {tweet_id: like.tweet_id}, {$inc: {like_count: -1}}, (err, tweet) ->
-                callback null
+              Tweet.findOneAndUpdate {tweet_id: like.tweet_id}, {$inc: {like_count: -1}}, callback
           else
             _like.remove (err) ->
               return callback 'you cant unlike it' if err
-              Tweet.findOneAndUpdate {tweet_id: like.tweet_id}, {$inc: {unlike_count: -1}}, (err, tweet) ->
-                callback null
-            _like.remove callback
+              Tweet.findOneAndUpdate {tweet_id: like.tweet_id}, {$inc: {unlike_count: -1}}, callback
       else
         _like = new Like like
         _like.save (err, _like) ->
           return callback 'you are already like or unlike it' if err
           if _like.is_like
-            Tweet.findOneAndUpdate {tweet_id: like.tweet_id}, {$inc: {like_count: 1}}, (err, tweet) ->
-              callback null
+            Tweet.findOneAndUpdate {tweet_id: like.tweet_id}, {$inc: {like_count: 1}}, callback
           else
-            Tweet.findOneAndUpdate {tweet_id: like.tweet_id}, {$inc: {unlike_count: 1}}, (err, tweet) ->
-              callback null
+            Tweet.findOneAndUpdate {tweet_id: like.tweet_id}, {$inc: {unlike_count: 1}}, callback
 
   comment_like: (like, callback) ->
     CommentLike.findOne {user_id: like.user_id, comment_id: like.comment_id}, (err, _like) ->
@@ -333,7 +328,29 @@ class Yabby
       tweet_ids = favs.map (fav) ->
         return fav.tweet_id
 
-      self.get_tweets tweet_id: {$in: tweet_ids}, null, callback
+      self.get_tweets tweet_id: {$in: tweet_ids}, null, (err, tweets) ->
+        return callback err if err
+        tweets = tweets.map (tweet) ->
+          tweet.favorite = true
+          return tweet
+
+        callback null, tweets
+
+
+  filled_favorite: (tweets, user_id, callback) ->
+    tweet_ids = tweets.map (tweet) ->
+      return tweet.tweet_id
+    Favorite.find {user_id: user_id, tweet_id: {$in: tweet_ids}}, (err, favs) ->
+      return callback err if err
+      data = {}
+      for fav in favs
+        data[fav.tweet_id] = true
+
+      tweets = tweets.map (tweet) ->
+        tweet.favorite = data[tweet.tweet_id]
+        return tweet
+
+      callback null, tweets
 
   upload: (file, bucket, callback) ->
     cb = (err, data) ->

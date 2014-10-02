@@ -212,6 +212,35 @@ article {
   .entry-content > :last-child {
     margin-bottom: 0;
   }
+  .entry-status {
+    margin: 10px 0;
+    span {
+      border: 1px solid #bbb;
+      -webkit-border-radius: 3px;
+      -moz-border-radius: 3px;
+      border-radius: 3px;
+      -webkit-box-shadow: inset 1px 1px 0 #eee,0 1px 0 #fff;
+      -moz-box-shadow: inset 1px 1px 0 #eee,0 1px 0 #fff;
+      box-shadow: inset 1px 1px 0 #eee,0 1px 0 #fff;
+      padding: 10px 8px 10px 36px;
+      line-height: 20px;
+      margin-right: 20px;
+      height: 20px;
+      cursor: pointer;
+      &.like {
+        background: #ffffff url(images/no_ding.png) no-repeat 6px 4px;
+      }
+      &.unlike {
+        background: #ffffff url(images/no_cai.png) no-repeat 6px 4px;
+      }
+      &.fav {
+        background: #ffffff url(images/bookmark.png) no-repeat 10px 4px;
+      }
+      &.unfav {
+        background: #ffffff url(images/no_bookmark.png) no-repeat 10px 4px;
+      }
+    }
+  }
 }
 
 

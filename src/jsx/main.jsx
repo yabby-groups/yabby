@@ -81,6 +81,34 @@ var Pagenavi = React.createClass({
 
 
 var TweetItem = React.createClass({
+  getInitialState: function() {
+    var tweet = this.props.tweet || {};
+    var like_count = tweet.like_count || 0;
+    var unlike_count = tweet.unlike_count || 0;
+    var favorite = 'unfav';
+    if (tweet.favorite) {
+      favorite = 'fav'
+    }
+    return {like_count: like_count, unlike_count: unlike_count, favorite: favorite};
+  },
+  handleLike: function() {
+    var self = this;
+    $.post("/api/tweets/" + this.props.tweet.tweet_id + '/like', function(data) {
+      self.setState(data);
+    });
+  },
+  handleUnLike: function() {
+    var self = this;
+    $.post("/api/tweets/" + this.props.tweet.tweet_id + '/unlike', function(data) {
+      self.setState(data);
+    });
+  },
+  handleFavorite: function() {
+    var self = this;
+    $.post("/api/tweets/" + this.props.tweet.tweet_id + '/favorite', function(data) {
+      self.setState({favorite: "fav"});
+    });
+  },
   render: function() {
     var tweet = this.props.tweet || {};
     var user = tweet.user || {};
@@ -107,6 +135,11 @@ var TweetItem = React.createClass({
             {tweet.text}
           </p>
           {file}
+        </div>
+        <div className="entry-status">
+          <span className="like" onClick={this.handleLike}>{this.state.like_count}</span>
+          <span className="unlike" onClick={this.handleUnLike}>{this.state.unlike_count}</span>
+          <span className={this.state.favorite} onClick={this.handleFavorite}></span>
         </div>
       </article>
     );

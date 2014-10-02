@@ -50,7 +50,11 @@ module.exports = (app, yabby) ->
     skip = page * limit
     yabby.get_tweets null, {skip: skip, limit: limit, sort: {tweet_id: -1}}, (err, data) ->
       data = data or {}
-      send_json_response res, err, tweets: data
+      if req.user and req.user.user_id
+        yabby.filled_favorite data, req.user.user_id, (err, data) ->
+          send_json_response res, err, tweets: data
+      else
+        send_json_response res, err, tweets: data
 
   app.get "#{api_prefix}/users/:user_id/tweets", (req, res) ->
     user_id = req.params.user_id
@@ -62,7 +66,11 @@ module.exports = (app, yabby) ->
     skip = page * limit
     yabby.get_tweets {user_id: user_id}, {skip: skip, limit: limit, sort: {tweet_id: -1}}, (err, data) ->
       data = data or {}
-      send_json_response res, err, tweets: data
+      if req.user and req.user.user_id
+        yabby.filled_favorite data, req.user.user_id, (err, data) ->
+          send_json_response res, err, tweets: data
+      else
+        send_json_response res, err, tweets: data
 
   app.get "#{api_prefix}/tweets/:tweet_id/comments", (req, res) ->
     tweet_id = req.params.tweet_id
@@ -101,14 +109,16 @@ module.exports = (app, yabby) ->
   app.post "#{api_prefix}/tweets/:tweet_id/like", require_login(), (req, res) ->
     tweet_id = req.params.tweet_id
     like = {user_id:req.user.user_id, tweet_id: tweet_id, is_like: true}
-    yabby.like like, (err) ->
-      send_json_response res, err, {}
+    yabby.like like, (err, tweet) ->
+      tweet = tweet or {}
+      send_json_response res, err, {like_count: tweet.like_count, unlike_count: tweet.unlike_count}
 
   app.post "#{api_prefix}/tweets/:tweet_id/unlike", require_login(), (req, res) ->
     tweet_id = req.params.tweet_id
     like = {user_id:req.user.user_id, tweet_id: tweet_id, is_like: false}
-    yabby.like like, (err) ->
-      send_json_response res, err, {}
+    yabby.like like, (err, tweet) ->
+      tweet = tweet or {}
+      send_json_response res, err, {like_count: tweet.like_count, unlike_count: tweet.unlike_count}
 
   app.post "#{api_prefix}/tweets/:tweet_id/favorite", require_login(), (req, res) ->
     tweet_id = req.params.tweet_id
@@ -159,8 +169,13 @@ module.exports = (app, yabby) ->
     else
       query.urlname = urlname_or_channel_id
 
-    yabby.get_channel_tweets query, options, (err, ctweets) ->
-      send_json_response res, err, tweets: ctweets
+    yabby.get_channel_tweets query, options, (err, data) ->
+      data = data or {}
+      if req.user and req.user.user_id
+        yabby.filled_favorite data, req.user.user_id, (err, data) ->
+          send_json_response res, err, tweets: data
+      else
+        send_json_response res, err, tweets: data
 
   app.get "#{api_prefix}/unread", (req, res) ->
     yabby.unread req.query, (err, count) ->
