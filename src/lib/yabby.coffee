@@ -297,7 +297,7 @@ class Yabby
                 res.json token.toJSON()
             else
               req.session.user = user
-              res.json user
+              res.json {user: user}
 
   do_auth: (username, passwd, callback) ->
     self = @

@@ -190,6 +190,14 @@ var InfoBox = React.createClass({
       self.setState(data);
     });
   },
+  handleLoginOut: function(evt) {
+    var self = this;
+    evt.defaultPrevented = true;
+    $.get('/logout', function() {
+      self.setState({user: null});
+    });
+    return false;
+  },
   loadUserInfo: function() {
     var self = this;
     $.get('/api/users/me', function(data) {
@@ -205,10 +213,10 @@ var InfoBox = React.createClass({
     }
   },
   render: function() {
-    if (!this.state.user && this.state.user.user_id) {
+    if (!this.state.user || !this.state.user.user_id) {
       return <LoginForm onLoginSubmit={this.handleLogin} />
     }
-    return <a href="/logout">{this.state.user.username}</a>
+    return <a href="/logout" onClick={this.handleLoginOut}>{this.state.user.username}</a>
   }
 });
 

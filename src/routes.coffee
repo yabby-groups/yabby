@@ -27,3 +27,9 @@ module.exports = (app, yabby) ->
 
   app.get "/", index
   app.get "/p/:page", index
+
+  app.get "/logout", (req, res) ->
+    if req.session and req.session.user
+      delete req.session.user
+
+    res.json {}
