@@ -136,7 +136,7 @@ var TweetBox = React.createClass({
     });
   },
   getInitialState: function() {
-    return {tweets: [], current: config.current, total: config.total};
+    return {tweets: [], current: config.current, total: config.total, limit: config.limit};
   },
   componentDidMount: function() {
     this.loadTweetsFromServer();
@@ -145,7 +145,7 @@ var TweetBox = React.createClass({
     return (
       <div className="container">
         <TweetList tweets={this.state.tweets} />
-        <Pagenavi current={this.state.current} total={this.state.total} />
+        <Pagenavi current={this.state.current} total={this.state.total} limit={this.state.limit}/>
       </div>
     );
   }

@@ -7,10 +7,18 @@ module.exports = (app, yabby) ->
   require_login = yabby.require_login
   require_admin = yabby.require_admin
 
-  app.get '/', (req, res) ->
+  index = (req, res) ->
+    page = req.params.page or 1
+    limit = if req.query.limit then Number(req.query.limit) else 10
+    limit = 100 if limit > 100
     Tweet.count (err, total) ->
       res.render 'index', {
-        current: 1
+        current: page
         total: total
+        limit: limit
         path: '/api/tweets/'
       }
+
+
+  app.get "/", index
+  app.get "/p/:page", index
