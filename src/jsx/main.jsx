@@ -197,10 +197,7 @@ var InfoBox = React.createClass({
     });
   },
   getInitialState: function() {
-    if (config.user) {
-      return {user: JSON.parse(config.user.replace(/&quot;/g, '"'))};
-    }
-    return {user: null};
+    return {user: config.user};
   },
   componentDidMount: function() {
     if (!config.user) {
@@ -208,7 +205,7 @@ var InfoBox = React.createClass({
     }
   },
   render: function() {
-    if (!this.state.user) {
+    if (!this.state.user && this.state.user.user_id) {
       return <LoginForm onLoginSubmit={this.handleLogin} />
     }
     return <a href="/logout">{this.state.user.username}</a>

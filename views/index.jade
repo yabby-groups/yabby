@@ -18,7 +18,7 @@ html(lang='zh-CN')
         path: '#{path}',
         img_host: '#{img_host}',
         host: '#{host}',
-        user: '#{user}'
+        user: !{JSON.stringify(user)}
       };
   body
     header#branding(role='banner')

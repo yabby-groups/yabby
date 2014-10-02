@@ -14,7 +14,7 @@ module.exports = (app, yabby) ->
     page = req.params.page or 1
     limit = if req.query.limit then Number(req.query.limit) else 10
     limit = 100 if limit > 100
-    user = if req.user then JSON.stringify clean_obj(req.user) else null
+    user = if req.user then clean_obj(req.user) else {}
     Tweet.count (err, total) ->
       res.render 'index', {
         current: page
