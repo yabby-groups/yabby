@@ -3,3 +3,5 @@ node_modules
 .idea
 .map
 style.css
+!public/static/js/jquery-2.1.0.min.js
+!public/static/js/react-0.11.2.js
