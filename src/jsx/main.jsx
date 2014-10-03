@@ -160,6 +160,8 @@ var TweetItem = React.createClass({
       avatar = <img src='/static/images/human.png' />
     }
 
+    var createdAt = DateFormat.format.date(new Date(tweet.created_at), '发布于 yyyy-M-dd HH:mm:ss');
+
     return (
       <article className="tweetItem">
         <header className="entry-header">
@@ -171,7 +173,7 @@ var TweetItem = React.createClass({
           </h3>
 
           <div className="entry-meta">
-            <time className="entry-date">{tweet.created_at + ""}</time>
+            <time className="entry-date">{createdAt}</time>
           </div>
         </header>
 
