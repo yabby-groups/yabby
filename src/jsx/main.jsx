@@ -323,9 +323,27 @@ var CommentItem = React.createClass({
         like_count = comment.like_count || 0;
       }
     }
+
+    var user = comment.user || {};
+
+    var avatar;
+    if (user.file) {
+      avatar  = <FileItem file={user.file} />;
+    } else {
+      avatar = <img src='/static/images/human.png' />
+    }
+
     return (
       <div className="comment">
-        <p>{comment.text}</p>
+        <div className="avatar">
+          {avatar}
+        </div>
+        <h3 className="entry-title">
+          <a href={"/users/" + user.user_id} title={user.username}>{user.username}</a>
+        </h3>
+        <div className="text">
+          <p>{comment.text}</p>
+        </div>
         <div className="right">
           <span className="like" onClick={this.handleLike}>{like_count}</span>
         </div>
