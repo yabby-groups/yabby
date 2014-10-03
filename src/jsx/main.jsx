@@ -197,12 +197,6 @@ var TweetBox = React.createClass({
 });
 
 
-React.renderComponent(
-  <TweetBox />,
-  document.querySelector("#content")
-);
-
-
 var LoginForm = React.createClass({
   handleSubmit: function(e) {
     e.preventDefault();
@@ -266,7 +260,16 @@ var InfoBox = React.createClass({
 });
 
 
-React.renderComponent(
-  <InfoBox />,
-  document.querySelector("#info")
-);
+function render_tweets() {
+  React.renderComponent(
+    <TweetBox />,
+    document.querySelector("#content")
+  );
+}
+
+function render_info() {
+  React.renderComponent(
+    <InfoBox />,
+    document.querySelector("#info")
+  );
+}
