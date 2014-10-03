@@ -131,9 +131,19 @@ var TweetItem = React.createClass({
       file = <FileItem file={tweet.file} />;
     }
 
+    var avatar;
+    if (tweet.user && tweet.user.file) {
+      avatar  = <FileItem file={tweet.user.file} />;
+    } else {
+      avatar = <img src='/static/images/human.png' />
+    }
+
     return (
       <article className="tweetItem">
         <header className="entry-header">
+          <div className="avatar">
+            {avatar}
+          </div>
           <h3 className="entry-title">
             <a href={"/users/" + user.user_id} title={user.username}>{user.username}</a>
           </h3>
