@@ -12,6 +12,28 @@ var FileItem = React.createClass({
 });
 
 
+var FileForm = React.createClass({
+  getInitialState: function() {
+    return {};
+  },
+  handleFile: function() {
+    $(".choose-file").text("正在上传");
+    $(this.refs.fileForm.getDOMNode()).submit();
+  },
+  handleClick: function() {
+    $(this.refs.file.getDOMNode()).click();
+  },
+  render: function() {
+    return (
+      <form className="fileForm" ref="fileForm" encType="multipart/form-data" method="POST" action="/api/upload">
+        <span className="choose-file" onClick={this.handleClick}> 选择图片 </span>
+        <input ref="file" type="file" name="file" onChange={this.handleFile} />
+      </form>
+    );
+  }
+});
+
+
 var Pagenavi = React.createClass({
   render: function() {
     var html = [];
@@ -170,6 +192,34 @@ var TweetItem = React.createClass({
           </div>
         </div>
       </article>
+    );
+  }
+});
+
+
+var TweetForm = React.createClass({
+  handleSubmit: function(e) {
+    e.preventDefault();
+    var text = this.refs.text.getDOMNode().value.trim();
+    var file_id = this.refs.file_id.getDOMNode().value.trim();
+    if (!text) {
+      return;
+    }
+    $.post("/api/tweets", {text: text, file_id: file_id}, function(data) {
+      console.log(data);
+      $(".choose-file").text("选择图片");
+    });
+    this.refs.text.getDOMNode().value = '';
+    this.refs.file_id.getDOMNode().value = '';
+    return;
+  },
+  render: function() {
+    return (
+      <form className="tweetForm clearfix" onSubmit={this.handleSubmit}>
+        <input ref="file_id" type="hidden" id="tweetFile" />
+        <textarea ref="text"> </textarea>
+        <input type="submit" value="发布" className="clearfix" />
+      </form>
     );
   }
 });
@@ -439,5 +489,22 @@ function render_tweet() {
   React.renderComponent(
     <OneTweetBox />,
     document.querySelector("#content")
+  );
+}
+
+
+function render_new_tweet() {
+  React.renderComponent(
+    <div className="newTweetBox">
+      <FileForm />
+      <TweetForm />
+    </div>,
+    document.querySelector("#content"),
+    function() {
+      $(".fileForm").ajaxForm(function(result) {
+        $(".choose-file").text("上传完成");
+        $("#tweetFile").val(result.file.file_id);
+      });
+    }
   );
 }

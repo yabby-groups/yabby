@@ -68,7 +68,7 @@ class Yabby
     tweet.save (err, tweet) ->
       return callback 'Create tweet fail' if err
       User.findOneAndUpdate {user_id: tweet.user_id}, {$inc: {tweet_count: 1}}, (err, user) ->
-        callback null, {}
+        callback null, tweet
 
   get_tweet: (tweet_id, callback) ->
     self = @
