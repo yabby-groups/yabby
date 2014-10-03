@@ -1,0 +1,15 @@
+extends layout
+block config
+  script.
+    var config = {
+      path: '#{path}',
+      img_host: '#{img_host}',
+      host: '#{host}',
+      user: !{JSON.stringify(user)}
+    };
+
+block render
+  script(src="/static/js/jquery.form.js")
+  script.
+    render_info();
+    render_new_tweet();
