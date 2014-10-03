@@ -3,7 +3,7 @@ html(lang='zh-CN')
   head
     meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
     meta(charset='UTF-8')
-    title 花苞儿
+    title= title
     meta(name='keywords', content='')
     meta(name='description', content='')
     link(rel='stylesheet' href='/static/style.css')
@@ -15,7 +15,7 @@ html(lang='zh-CN')
     header#branding(role='banner')
       hgroup#logo
         h1#site-title
-          a(href='#{host}', title='花苞儿', rel='home') 花苞儿
+          a(href='#{host}', title='#{title}', rel='home')= title
         // h5#site-description
       nav(role='navigation')
         ul.topmenu
@@ -33,7 +33,7 @@ html(lang='zh-CN')
             input#searchsubmit(type='submit', name='submit', value='搜索')
     footer(role='contentinfo')
       | &copy; 2007-2014 &nbsp;
-      a(href='#{host}', rel='home') 花苞儿
+      a(href='#{host}', rel='home')= title
       span.sep
       a(target='_blank', href='#') 联系我们
       span.sep

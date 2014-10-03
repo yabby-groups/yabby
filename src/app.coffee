@@ -22,6 +22,7 @@ app = express()
 
 app.locals.host = config.host
 app.locals.img_host = config.img_host
+app.locals.title = config.title
 
 # all environments
 app.set 'port', config.port or process.env.PORT or 3000

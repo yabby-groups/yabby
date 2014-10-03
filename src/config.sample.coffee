@@ -2,6 +2,7 @@ module.exports =
   port: 3000
   host: 'http://huabot.com'
   img_host: 'http://huabot.b0.upaiyun.com'
+  title: '花苞儿'
   mongod: "mongodb://localhost/tweet"
   api_prefix: ""
   cookie_secret: "your cookie secret"
