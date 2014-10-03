@@ -83,13 +83,9 @@ var Pagenavi = React.createClass({
 var TweetItem = React.createClass({
   getInitialState: function() {
     var tweet = this.props.tweet || {};
-    var like_count = tweet.like_count || 0;
-    var unlike_count = tweet.unlike_count || 0;
-    var favorite = 'unfav';
-    if (tweet.favorite) {
-      favorite = 'fav'
-    }
-    return {like_count: like_count, unlike_count: unlike_count, favorite: favorite};
+    var like_count = tweet.like_count;
+    var unlike_count = tweet.unlike_count;
+    return {like_count: like_count, unlike_count: unlike_count};
   },
   handleLike: function() {
     var self = this;
@@ -112,8 +108,18 @@ var TweetItem = React.createClass({
   render: function() {
     var tweet = this.props.tweet || {};
     var user = tweet.user || {};
-    var like_count = this.state.like_count || tweet.like_count || 0;
-    var unlike_count = this.state.unlike_count || tweet.unlike_count || 0;
+    var like_count = this.state.like_count;
+    if (!like_count)  {
+      if (like_count !== 0) {
+        like_count = tweet.like_count || 0;
+      }
+    }
+    var unlike_count = this.state.unlike_count;
+    if (!unlike_count) {
+      if (unlike_count !== 0) {
+        unlike_count = tweet.unlike_count || 0;
+      }
+    }
     var favorite = 'unfav';
     if (tweet.favorite) {
       favorite = 'fav'
