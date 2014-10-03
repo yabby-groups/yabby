@@ -245,13 +245,12 @@ var InfoBox = React.createClass({
       self.setState(data);
     });
   },
-  handleLoginOut: function(evt) {
+  handleLogout: function(evt) {
     var self = this;
-    evt.defaultPrevented = true;
+    evt.preventDefault();
     $.get('/logout', function() {
       self.setState({user: null});
     });
-    return false;
   },
   loadUserInfo: function() {
     var self = this;
@@ -271,7 +270,7 @@ var InfoBox = React.createClass({
     if (!this.state.user || !this.state.user.user_id) {
       return <LoginForm onLoginSubmit={this.handleLogin} />
     }
-    return <a href="/logout" onClick={this.handleLoginOut}>{this.state.user.username}</a>
+    return <a href="/logout" onClick={this.handleLogout}>{this.state.user.username}</a>
   }
 });
 
