@@ -112,6 +112,13 @@ var TweetItem = React.createClass({
   render: function() {
     var tweet = this.props.tweet || {};
     var user = tweet.user || {};
+    var like_count = this.state.like_count || tweet.like_count || 0;
+    var unlike_count = this.state.unlike_count || tweet.unlike_count || 0;
+    var favorite = 'unfav';
+    if (tweet.favorite) {
+      favorite = 'fav'
+    }
+    favorite = this.state.favorite || favorite;
 
     var file = '';
     if (tweet.file) {
@@ -137,11 +144,11 @@ var TweetItem = React.createClass({
           {file}
         </div>
         <div className="entry-status">
-          <span className="like" onClick={this.handleLike}>{this.state.like_count}</span>
-          <span className="unlike" onClick={this.handleUnLike}>{this.state.unlike_count}</span>
-          <span className={this.state.favorite} onClick={this.handleFavorite}></span>
+          <span className="like" onClick={this.handleLike}>{like_count}</span>
+          <span className="unlike" onClick={this.handleUnLike}>{unlike_count}</span>
+          <span className={favorite} onClick={this.handleFavorite}></span>
           <div className="right">
-            <a href={"/tweets/" + tweet.tweet_id}>
+            <a href={"/tweets/" + tweet.tweet_id + "#comment"}>
               <span className="comment">{tweet.comment_count}</span>
             </a>
           </div>
