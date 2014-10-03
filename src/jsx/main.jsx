@@ -424,7 +424,7 @@ var CommentForm = React.createClass({
     return (
       <form className="commentForm clearfix" onSubmit={this.handleSubmit}>
         <textarea ref="text"> </textarea>
-        <input type="submit" value="提交" className="clearfix" />
+        <input type="submit" value="评论" />
       </form>
     );
   }
