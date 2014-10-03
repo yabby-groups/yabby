@@ -20,8 +20,12 @@ html(lang='zh-CN')
         // h5#site-description
       nav(role='navigation')
         ul.topmenu
-          li.menu-item.menu-item-type-custom.menu-item-object-custom
+          li
             a(href='#{host}') 首页
+          li
+            a(href='#{host}/tweets/new') 发布
+          li
+            a(href='#{host}/favorite') 收藏
       #info
     .split
     section#main

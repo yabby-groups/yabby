@@ -26,11 +26,29 @@ module.exports = (app, yabby) ->
         api: '/api/tweets'
         url: "#{host}"
       }
+
+
+  favorite = (req, res) ->
+    page = req.params.page or 1
+    limit = if req.query.limit then Number(req.query.limit) else 10
+    limit = 100 if limit > 100
+    user = if req.user then clean_obj(req.user) else {}
+    Favorite.count {user_id: user.user_id}, (err, total) ->
+      res.render 'index', {
+        current: page
+        total: total
+        limit: limit
+        user: user
+        api: "/api/users/#{user.user_id}/favorite"
+        url: "/favorite"
       }
 
 
   app.get "/", index
   app.get "/p/:page", index
+
+  app.get "/favorite", require_login(), favorite
+  app.get "/favorite/p/:page", require_login(), favorite
 
   app.get "/tweets/new", (req, res) ->
     user = if req.user then clean_obj(req.user) else {}
