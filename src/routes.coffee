@@ -1,6 +1,8 @@
 {User, Passwd, OauthToken, Tweet, Comment, File, Like, CommentLike, Favorite,
   Channel, ChannelTweet, Sequence, UserView, Binding} = require './lib/models'
 
+{host} = require "./config"
+
 {clean_obj} = require './lib/util'
 
 async = require 'async'
@@ -21,7 +23,9 @@ module.exports = (app, yabby) ->
         total: total
         limit: limit
         user: user
-        path: '/api/tweets/'
+        api: '/api/tweets'
+        url: "#{host}"
+      }
       }
 
 
@@ -33,7 +37,8 @@ module.exports = (app, yabby) ->
     tweet_id = req.params.tweet_id
     res.render 'new_tweet', {
       user: user
-      path: "/api/tweets"
+      api: "/api/tweets"
+      url: "/tweets/new"
     }
 
   app.get "/tweets/:tweet_id", (req, res) ->
@@ -41,7 +46,8 @@ module.exports = (app, yabby) ->
     tweet_id = req.params.tweet_id
     res.render 'tweet', {
       user: user
-      path: "/api/tweets/#{tweet_id}"
+      api: "/api/tweets/#{tweet_id}"
+      url: "/tweets/#{tweet_id}"
     }
 
 

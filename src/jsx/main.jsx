@@ -44,15 +44,15 @@ var Pagenavi = React.createClass({
     }
     var current = this.props.current || 1;
     if (current > 3) {
-      html.push(<a className="first" href="/">« 最新</a>);
+      html.push(<a className="first" href={config.url + "/"}>« 最新</a>);
     }
 
     if (current == 2) {
-      html.push(<a className="prev" href="/">«</a>);
+      html.push(<a className="prev" href={config.url + "/"}>«</a>);
     }
 
     if (current > 2) {
-      html.push(<a className="prev" href={'/p/' + (current - 1)}>«</a>);
+      html.push(<a className="prev" href={config.url + '/p/' + (current - 1)}>«</a>);
     }
 
     if (current > 3) {
@@ -74,9 +74,9 @@ var Pagenavi = React.createClass({
       if (i == current) {
         html.push(<span className="current">{i}</span>)
       } else if (i < current) {
-        html.push(<a className="page smaller" href={"/p/" + i}>{i}</a>);
+        html.push(<a className="page smaller" href={config.url + "/p/" + i}>{i}</a>);
       } else {
-        html.push(<a className="page larger" href={"/p/" + i}>{i}</a>);
+        html.push(<a className="page larger" href={config.url + "/p/" + i}>{i}</a>);
       }
     }
 
@@ -85,11 +85,11 @@ var Pagenavi = React.createClass({
     }
 
     if (current < total_page) {
-      html.push(<a className="next" href={"/p/" + total_page}>»</a>);
+      html.push(<a className="next" href={config.url + "/p/" + total_page}>»</a>);
     }
 
     if (end < total_page) {
-      html.push(<a className="last" href={"/p/" + total_page}>最旧 »</a>);
+      html.push(<a className="last" href={config.url + "/p/" + total_page}>最旧 »</a>);
     }
 
     return (
@@ -244,7 +244,12 @@ var TweetList = React.createClass({
 var TweetBox = React.createClass({
   loadTweetsFromServer: function() {
     var self = this;
-    $.get(config.path, function(data) {
+    var url = config.api;
+    if (config.current > 1) {
+      var limit = config.limit || 10;
+      url = url + "?page=" + (config.current - 1) + "&limit=" + limit;
+    }
+    $.get(url, function(data) {
       self.setState(data);
     });
   },
@@ -330,7 +335,7 @@ var InfoBox = React.createClass({
 var OneTweetBox = React.createClass({
   loadTweetFromServer: function() {
     var self = this;
-    $.get(config.path, function(data) {
+    $.get(config.api, function(data) {
       self.setState(data);
     });
   },
@@ -444,7 +449,7 @@ var CommentBox = React.createClass({
   loadCommentsFromServer: function() {
     var self = this;
     var tweetId = this.props.tweetId;
-    $.get(config.path + '/comments', function(data) {
+    $.get(config.api + '/comments', function(data) {
       self.setState(data);
     });
   },
@@ -457,7 +462,7 @@ var CommentBox = React.createClass({
   },
   handleComment: function(comment) {
     var self = this;
-    $.post(config.path + '/comments', comment, function() {
+    $.post(config.api + '/comments', comment, function() {
       self.loadCommentsFromServer();
     })
   },
