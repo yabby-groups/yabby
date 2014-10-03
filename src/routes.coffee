@@ -28,6 +28,15 @@ module.exports = (app, yabby) ->
   app.get "/", index
   app.get "/p/:page", index
 
+  app.get "/tweets/:tweet_id", (req, res) ->
+    user = if req.user then clean_obj(req.user) else {}
+    tweet_id = req.params.tweet_id
+    res.render 'tweet', {
+      user: user
+      path: "/api/tweets/#{tweet_id}"
+    }
+
+
   app.get "/logout", (req, res) ->
     if req.session and req.session.user
       delete req.session.user

@@ -260,6 +260,29 @@ var InfoBox = React.createClass({
 });
 
 
+var OneTweetBox = React.createClass({
+  loadTweetFromServer: function() {
+    var self = this;
+    $.get(config.path, function(data) {
+      self.setState(data);
+    });
+  },
+  getInitialState: function() {
+    return {tweet: {}};
+  },
+  componentDidMount: function() {
+    this.loadTweetFromServer();
+  },
+  render: function() {
+    return (
+      <div className="container">
+        <TweetItem tweet={this.state.tweet} />
+      </div>
+    );
+  }
+});
+
+
 function render_tweets() {
   React.renderComponent(
     <TweetBox />,
@@ -271,5 +294,13 @@ function render_info() {
   React.renderComponent(
     <InfoBox />,
     document.querySelector("#info")
+  );
+}
+
+
+function render_tweet() {
+  React.renderComponent(
+    <OneTweetBox />,
+    document.querySelector("#content")
   );
 }
