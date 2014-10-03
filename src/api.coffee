@@ -33,7 +33,11 @@ module.exports = (app, yabby) ->
   app.get "#{api_prefix}/tweets/:tweet_id", (req, res) ->
     tweet_id = req.params.tweet_id
     yabby.get_tweet tweet_id, (err, data) ->
-      send_json_response res, err, tweet: data
+      if req.user
+        yabby.filled_favorite [data], req.user.user_id, (err, tweets) ->
+          send_json_response res, err, tweet: tweets[0]
+      else
+        send_json_response res, err, tweet: data
 
   app.delete "#{api_prefix}/tweets/:tweet_id", require_login(), (req, res) ->
     tweet_id = req.params.tweet_id
