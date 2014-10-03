@@ -99,8 +99,9 @@ module.exports = (app, yabby) ->
     tweet_id = req.params.tweet_id
     comment_id = req.params.comment_id
     like = {user_id:req.user.user_id, comment_id: comment_id}
-    yabby.comment_like like, (err) ->
-      send_json_response res, err, {}
+    yabby.comment_like like, (err, comment) ->
+      comment = comment or {}
+      send_json_response res, err, {like_count: comment.like_count}
 
   app.delete "#{api_prefix}/tweets/:tweet_id/comments/:comment_id", require_login(), (req, res) ->
     tweet_id = req.params.tweet_id

@@ -283,6 +283,110 @@ var OneTweetBox = React.createClass({
     return (
       <div className="container">
         <TweetItem tweet={this.state.tweet} />
+        <CommentBox />
+      </div>
+    );
+  }
+});
+
+
+var CommentItem = React.createClass({
+  getInitialState: function() {
+    var comment = this.props.comment || {};
+    var like_count = comment.like_count;
+    var unlike_count = comment.unlike_count;
+    return {like_count: like_count, unlike_count: unlike_count};
+  },
+  handleLike: function() {
+    var self = this;
+    var commentId = this.props.comment.comment_id;
+    var tweetId = this.props.comment.tweet_id;
+    $.post("/api/tweets/" + tweetId + '/comments/' + commentId + '/like', function(data) {
+      self.setState(data);
+    });
+  },
+  render: function() {
+    var comment = this.props.comment;
+    var like_count = this.state.like_count;
+    if (!like_count) {
+      if (like_count !== 0) {
+        like_count = comment.like_count || 0;
+      }
+    }
+    return (
+      <div className="comment">
+        <p>{comment.text}</p>
+        <div className="right">
+          <span className="like" onClick={this.handleLike}>{like_count}</span>
+        </div>
+      </div>
+    );
+  }
+});
+
+
+var CommentForm = React.createClass({
+  handleSubmit: function(e) {
+    e.preventDefault();
+    var text = this.refs.text.getDOMNode().value.trim();
+    if (!text) {
+      return;
+    }
+    this.props.onCommentSubmit({text: text});
+    this.refs.text.getDOMNode().value = '';
+    return;
+  },
+  render: function() {
+    return (
+      <form className="commentForm clearfix" onSubmit={this.handleSubmit}>
+        <textarea ref="text"> </textarea>
+        <input type="submit" value="提交" className="clearfix" />
+      </form>
+    );
+  }
+});
+
+
+var CommentList = React.createClass({
+  render: function() {
+    var commentNodes = this.props.comments.map(function(comment, index) {
+      return <CommentItem comment={comment} />
+    });
+    return (
+      <div className="commentList">
+      {commentNodes}
+      </div>
+    );
+  }
+});
+
+
+var CommentBox = React.createClass({
+  loadCommentsFromServer: function() {
+    var self = this;
+    var tweetId = this.props.tweetId;
+    $.get(config.path + '/comments', function(data) {
+      self.setState(data);
+    });
+  },
+  getInitialState: function() {
+    this.loadCommentsFromServer();
+    return {comments: []};
+  },
+  componentDidMount: function() {
+    this.loadCommentsFromServer();
+  },
+  handleComment: function(comment) {
+    var self = this;
+    $.post(config.path + '/comments', comment, function() {
+      self.loadCommentsFromServer();
+    })
+  },
+  render: function() {
+    return (
+      <div className="commentBox">
+        <CommentList comments={this.state.comments} />
+        <CommentForm onCommentSubmit={this.handleComment} />
       </div>
     );
   }
