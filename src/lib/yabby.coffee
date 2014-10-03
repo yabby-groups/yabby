@@ -229,14 +229,12 @@ class Yabby
       if _like
         _like.remove (err) ->
           return callback 'your cant unlike the comment' if err
-          Comment.findOneAndUpdate {tweet_id: like.comment_id}, {$inc: {like_count: -1}}, (err, comment) ->
-            callback null
+          Comment.findOneAndUpdate {comment_id: like.comment_id}, {$inc: {like_count: -1}}, callback
       else
         _like = new CommentLike like
         _like.save (err, _like) ->
           return callback 'your cant like the comment' if err
-          Comment.findOneAndUpdate {tweet_id: like.comment_id}, {$inc: {like_count: 1}}, (err, comment) ->
-            callback null
+          Comment.findOneAndUpdate {comment_id: like.comment_id}, {$inc: {like_count: 1}}, callback
 
   auth: (auth_path='/auth') ->
     self = @
