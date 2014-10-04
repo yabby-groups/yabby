@@ -124,7 +124,8 @@ var TweetItem = React.createClass({
   handleFavorite: function() {
     var self = this;
     $.post("/api/tweets/" + this.props.tweet.tweet_id + '/favorite', function(data) {
-      self.setState({favorite: "fav"});
+      var fav = data.favorite? "fav": "unfav"
+      self.setState({favorite: fav});
     });
   },
   render: function() {

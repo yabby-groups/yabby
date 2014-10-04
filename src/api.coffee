@@ -128,8 +128,8 @@ module.exports = (app, yabby) ->
   app.post "#{api_prefix}/tweets/:tweet_id/favorite", require_login(), (req, res) ->
     tweet_id = req.params.tweet_id
     fav = {user_id:req.user.user_id, tweet_id: tweet_id}
-    yabby.favorite fav, (err) ->
-      send_json_response res, err, {}
+    yabby.favorite fav, (err, fav) ->
+      send_json_response res, err, {favorite: fav}
 
   app.get "#{api_prefix}/users/:user_id/favorite", require_login(), (req, res) ->
     user_id = req.params.user_id

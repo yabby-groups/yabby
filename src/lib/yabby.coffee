@@ -313,11 +313,11 @@ class Yabby
       res.json {err: 401, msg: 'Unauthorized'}
 
   favorite: (fav, callback) ->
-    Favorite.findOne fav, (err, _fav) ->
-      return callback 'your already favorite it' if _fav
+    Favorite.findOneAndRemove fav, (err, _fav) ->
+      return callback err, false if _fav
       _fav = new Favorite fav
       _fav.save (err, _fav) ->
-        callback err
+        callback err, true
 
   get_favorites: (query, options, callback) ->
     self = @
