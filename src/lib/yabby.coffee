@@ -326,7 +326,7 @@ class Yabby
       tweet_ids = favs.map (fav) ->
         return fav.tweet_id
 
-      self.get_tweets tweet_id: {$in: tweet_ids}, null, (err, tweets) ->
+      self.get_tweets tweet_id: {$in: tweet_ids}, {sort: {tweet_id: -1}}, (err, tweets) ->
         return callback err if err
         tweets = tweets.map (tweet) ->
           tweet.favorite = true
@@ -415,7 +415,7 @@ class Yabby
         tweet_ids = channel_tweets.map (ctweet) ->
           return ctweet.tweet_id
 
-        self.get_tweets tweet_id: {$in: tweet_ids}, null, (err, tweets) ->
+        self.get_tweets tweet_id: {$in: tweet_ids}, {sort: {tweet_id: -1}}, (err, tweets) ->
           channel = channel.toJSON()
           tweet_seqs = {}
           channel_tweets.forEach (ct) ->
