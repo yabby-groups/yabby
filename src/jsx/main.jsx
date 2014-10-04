@@ -328,7 +328,21 @@ var InfoBox = React.createClass({
     if (!this.state.user || !this.state.user.user_id) {
       return <LoginForm onLoginSubmit={this.handleLogin} />
     }
-    return <a href="/logout" onClick={this.handleLogout}>{this.state.user.username}</a>
+
+    var user = this.state.user;
+
+    var avatar;
+    if (user.file) {
+      avatar  = <FileItem file={user.file} />;
+    } else {
+      avatar = <img src='/static/images/human.png' />
+    }
+    return (
+      <a href="/logout" onClick={this.handleLogout}>
+        {avatar}
+        {user.username}
+      </a>
+    );
   }
 });
 
