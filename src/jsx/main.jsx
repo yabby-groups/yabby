@@ -26,7 +26,7 @@ var FileForm = React.createClass({
   render: function() {
     return (
       <form className="fileForm" ref="fileForm" encType="multipart/form-data" method="POST" action="/api/upload">
-        <span className="choose-file" onClick={this.handleClick}> 选择图片 </span>
+        <button className="choose-file" onClick={this.handleClick}> 选择图片 </button>
         <input ref="file" type="file" name="file" onChange={this.handleFile} />
       </form>
     );
@@ -170,7 +170,7 @@ var TweetItem = React.createClass({
     if (config.user.user_id == user.user_id) {
       entryBtn = (
           <div className="entry-btn">
-            <span className="delBtn" onClick={this.handleDelete}>删除</span>
+            <button className="delBtn" onClick={this.handleDelete}>删除</button>
           </div>
       );
     }
@@ -200,12 +200,12 @@ var TweetItem = React.createClass({
           {file}
         </div>
         <div className="entry-status">
-          <span className="like" onClick={this.handleLike}>{like_count}</span>
-          <span className="unlike" onClick={this.handleUnLike}>{unlike_count}</span>
-          <span className={favorite} onClick={this.handleFavorite}></span>
+          <button className="like" onClick={this.handleLike}>{like_count}</button>
+          <button className="unlike" onClick={this.handleUnLike}>{unlike_count}</button>
+          <button className={favorite} onClick={this.handleFavorite}></button>
           <div className="right">
             <a href={"/tweets/" + tweet.tweet_id + "#comment"}>
-              <span className="comment">{tweet.comment_count}</span>
+              <button className="comment">{tweet.comment_count}</button>
             </a>
           </div>
         </div>
@@ -441,7 +441,7 @@ var CommentItem = React.createClass({
           <p>{comment.text}</p>
         </div>
         <div className="right">
-          <span className="like" onClick={this.handleLike}>{like_count}</span>
+          <button className="like" onClick={this.handleLike}>{like_count}</button>
         </div>
       </div>
     );

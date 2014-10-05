@@ -224,9 +224,8 @@ article {
     margin-bottom: 0;
   }
   .entry-status {
-    margin: 10px 0;
     position: relative;
-    span {
+    button {
       border: 1px solid #bbb;
       -webkit-border-radius: 3px;
       -moz-border-radius: 3px;
@@ -235,9 +234,8 @@ article {
       -moz-box-shadow: inset 1px 1px 0 #eee,0 1px 0 #fff;
       box-shadow: inset 1px 1px 0 #eee,0 1px 0 #fff;
       padding: 10px 8px 10px 36px;
-      line-height: 20px;
       margin-right: 20px;
-      height: 20px;
+      height: 36px;
       cursor: pointer;
       &.like {
         background: #ffffff url(images/no_ding.png) no-repeat 6px 4px;
@@ -280,7 +278,7 @@ article {
     }
   }
   .entry-btn {
-    top: 6px;
+    top: 9px;
     position: absolute;
     right: 0;
     .delBtn {
@@ -528,7 +526,7 @@ aside{
     margin-bottom: 10px;
     padding: 0 0 10px;
     height: 32px;
-    span {
+    button {
       border: 1px solid #bbb;
       -webkit-border-radius: 3px;
       -moz-border-radius: 3px;
@@ -537,9 +535,8 @@ aside{
       -moz-box-shadow: inset 1px 1px 0 #eee,0 1px 0 #fff;
       box-shadow: inset 1px 1px 0 #eee,0 1px 0 #fff;
       padding: 10px 8px 10px 36px;
-      line-height: 20px;
       margin-right: 20px;
-      height: 20px;
+      height: 36px;
       cursor: pointer;
       &.like {
         background: #ffffff url(images/no_ding.png) no-repeat 6px 4px;
@@ -550,7 +547,7 @@ aside{
     }
     .right {
       right: -20px;
-      top: 6px;
+      top: -1px;
       position: absolute;
     }
     .avatar {
@@ -627,7 +624,7 @@ aside{
   -moz-box-shadow: inset 0 0 0 1px #fff,0 1px 2px #ddd;
   box-shadow: inset 0 0 0 1px #fff,0 1px 2px #ddd;
   .tweetForm {
-    margin-top: 15px;
+    margin-top: 10px;
     position: relative;
     textarea {
       .input_box();
@@ -666,23 +663,29 @@ aside{
     }
   }
   .fileForm {
-    margin-top: 10px;
-    span {
-      border: 1px solid #bbb;
-      -webkit-border-radius: 3px;
-      -moz-border-radius: 3px;
-      border-radius: 3px;
-      -webkit-box-shadow: inset 1px 1px 0 #eee,0 1px 0 #fff;
-      -moz-box-shadow: inset 1px 1px 0 #eee,0 1px 0 #fff;
-      box-shadow: inset 1px 1px 0 #eee,0 1px 0 #fff;
-      padding: 10px 8px 10px 14px;
-      line-height: 20px;
-      margin-right: 20px;
-      height: 20px;
+    button {
+      display: inline-block;
+      padding: 6px 12px;
+      margin-bottom: 0;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.42857143;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: middle;
       cursor: pointer;
-      background: #0A3;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      background-image: none;
+      border: 1px solid transparent;
+      border-radius: 4px;
+
       color: #fff;
-      font-weight: bold;
+      background-color: #449d44;
+      border-color: #398439;
+
       &:hover {
         opacity: 0.7;
       }
