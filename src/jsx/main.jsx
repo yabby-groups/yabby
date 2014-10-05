@@ -128,6 +128,11 @@ var TweetItem = React.createClass({
       self.setState({favorite: fav});
     });
   },
+  handleDelete: function(evt) {
+    var self = this;
+    $(self.getDOMNode()).hide();
+    $.ajax("/api/tweets/" + this.props.tweet.tweet_id, {method: 'DELETE'}).done(function(data) {});
+  },
   render: function() {
     var tweet = this.props.tweet || {};
     var user = tweet.user || {};
@@ -161,6 +166,15 @@ var TweetItem = React.createClass({
       avatar = <img src='/static/images/human.png' />
     }
 
+    var entryBtn = "";
+    if (config.user.user_id == user.user_id) {
+      entryBtn = (
+          <div className="entry-btn">
+            <span className="delBtn" onClick={this.handleDelete}>删除</span>
+          </div>
+      );
+    }
+
     var createdAt = DateFormat.format.date(new Date(tweet.created_at), '发布于 yyyy-M-dd HH:mm:ss');
 
     return (
@@ -176,6 +190,7 @@ var TweetItem = React.createClass({
           <div className="entry-meta">
             <time className="entry-date">{createdAt}</time>
           </div>
+          {entryBtn}
         </header>
 
         <div className="entry-content clearfix">
