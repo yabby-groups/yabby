@@ -231,11 +231,21 @@ var TweetForm = React.createClass({
     this.refs.file_id.getDOMNode().value = '';
     return;
   },
+  handleFocus: function() {
+    $('.tweetForm .placeholder').hide();
+  },
+  handleBlur: function() {
+    var text = this.refs.text.getDOMNode().value.trim();
+    if (!text) {
+      $('.tweetForm .placeholder').show();
+    }
+  },
   render: function() {
     return (
       <form className="tweetForm clearfix" onSubmit={this.handleSubmit}>
         <input ref="file_id" type="hidden" id="tweetFile" />
-        <textarea ref="text"> </textarea>
+        <div className="placeholder">把好玩的图片，好笑的段子或糗事发到这里，接受千万网友的拜模吧！ </div>
+        <textarea ref="text" onFocus={this.handleFocus} onBlur={this.handleBlur}> </textarea>
         <input type="submit" value="发布" className="clearfix" />
       </form>
     );
@@ -450,10 +460,20 @@ var CommentForm = React.createClass({
     this.refs.text.getDOMNode().value = '';
     return;
   },
+  handleFocus: function() {
+    $('.commentForm .placeholder').hide();
+  },
+  handleBlur: function() {
+    var text = this.refs.text.getDOMNode().value.trim();
+    if (!text) {
+      $('.commentForm .placeholder').show();
+    }
+  },
   render: function() {
     return (
       <form className="commentForm clearfix" onSubmit={this.handleSubmit}>
-        <textarea ref="text"> </textarea>
+        <div className="placeholder">这里是评论！ </div>
+        <textarea ref="text" onFocus={this.handleFocus} onBlur={this.handleBlur}> </textarea>
         <input type="submit" value="评论" />
       </form>
     );
