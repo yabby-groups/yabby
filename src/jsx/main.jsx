@@ -331,7 +331,7 @@ var LoginForm = React.createClass({
 });
 
 
-var PopupLoginBox = React.createClass({
+var PopupLogin = React.createClass({
   handleLogin: function(info) {
     var self = this;
     $.post('/auth', info, function(data) {
@@ -396,12 +396,12 @@ var RegisterForm = React.createClass({
 });
 
 
-var PopupRegisterBox = React.createClass({
+var PopupRegister = React.createClass({
   handleRegister: function(info) {
     var self = this;
     $.post('/api/users/register', info, function(data) {
       if (data.user) {
-        React.renderComponent(<PopupLoginBox />, document.querySelector('#popup'));
+        self.props.onLoginClick();
       } else {
         window.alert(data.msg);
       }
@@ -432,19 +432,23 @@ var PopupBox = React.createClass({
     return {popupLogin: this.props.popupLogin, popupRegister: this.props.popupRegister}
   },
   handleLoginClick: function(evt) {
-    evt.preventDefault();
+    if (evt) {
+      evt.preventDefault();
+    }
     this.setState({popupLogin: true, popupRegister: false});
   },
   handleRegisterClick: function(evt) {
-    evt.preventDefault();
+    if (evt) {
+      evt.preventDefault();
+    }
     this.setState({popupLogin: false, popupRegister: true});
   },
   render: function() {
     var inner = null;
     if (this.state.popupLogin) {
-      inner = <PopupLoginBox onRegisterClick={this.handleRegisterClick} />;
+      inner = <PopupLogin onRegisterClick={this.handleRegisterClick} />;
     } else if (this.state.popupRegister) {
-      inner = <PopupRegisterBox onLoginClick={this.handleLoginClick} />;
+      inner = <PopupRegister onLoginClick={this.handleLoginClick} />;
     } else {
       return false;
     }
