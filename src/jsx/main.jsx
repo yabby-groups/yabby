@@ -348,9 +348,14 @@ var PopupLogin = React.createClass({
         <h1> 登陆花苞儿 </h1>
         <LoginForm onLoginSubmit={this.handleLogin} />
         <div className="other">
-          <a href="/forget_passwd" className="forget_passwd">忘记密码</a>
-          <span>还没有花苞儿账号?</span>
-          <a href="/register" className="register" onClick={this.props.onRegisterClick}>点击注册</a></div>
+          <div className="left">
+            <a href="/forget_passwd">忘记密码</a>
+          </div>
+          <div className="right">
+            还没有花苞儿账号? &nbsp;
+            <a href="/register" onClick={this.props.onRegisterClick}>点击注册</a>
+          </div>
+        </div>
       </div>
     );
   }
@@ -413,8 +418,10 @@ var PopupRegister = React.createClass({
         <h1> 注册花苞儿 </h1>
         <RegisterForm onRegisterSubmit={this.handleRegister} />
         <div className="other">
-          <span>已有花苞儿账号?</span>
-          <a href="login" className="login" onClick={this.props.onLoginClick}>登陆</a>
+          <div className="right">
+            已有花苞儿账号? &nbsp;
+            <a href="/login" onClick={this.props.onLoginClick}>登陆</a>
+          </div>
         </div>
       </div>
     );
