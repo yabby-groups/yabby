@@ -342,26 +342,15 @@ var PopupLoginBox = React.createClass({
       }
     });
   },
-  handleRegisterClick: function(evt) {
-    evt.preventDefault();
-    React.renderComponent(<PopupRegisterBox />, document.querySelector('#popup'));
-  },
-  destory: function(evt) {
-    if (evt.target.className === 'popup-outer') {
-      umountPopup();
-    }
-  },
   render: function() {
     return (
-      <div className="popup-outer" onClick={this.destory}>
-        <div className="popup-inner">
-          <h1> 登陆花苞儿 </h1>
-          <LoginForm onLoginSubmit={this.handleLogin} />
-          <div className="other">
-            <a href="/forget_passwd" className="forget_passwd">忘记密码</a>
-            <span>还没有花苞儿账号?</span>
-            <a href="/register" className="register" onClick={this.handleRegisterClick}>点击注册</a></div>
-        </div>
+      <div className="popup-inner">
+        <h1> 登陆花苞儿 </h1>
+        <LoginForm onLoginSubmit={this.handleLogin} />
+        <div className="other">
+          <a href="/forget_passwd" className="forget_passwd">忘记密码</a>
+          <span>还没有花苞儿账号?</span>
+          <a href="/register" className="register" onClick={this.props.onRegisterClick}>点击注册</a></div>
       </div>
     );
   }
@@ -418,24 +407,50 @@ var PopupRegisterBox = React.createClass({
       }
     });
   },
-  handleLoginClick: function(evt) {
-    evt.preventDefault();
-    React.renderComponent(<PopupLoginBox />, document.querySelector('#popup'));
-  },
+  render: function() {
+    return (
+      <div className="popup-inner popup-reg">
+        <h1> 注册花苞儿 </h1>
+        <RegisterForm onRegisterSubmit={this.handleRegister} />
+        <div className="other">
+          <span>已有花苞儿账号?</span>
+          <a href="login" className="login" onClick={this.props.onLoginClick}>登陆</a>
+        </div>
+      </div>
+    );
+  }
+});
+
+
+var PopupBox = React.createClass({
   destory: function(evt) {
     if (evt.target.className === 'popup-outer') {
       umountPopup();
     }
   },
+  getInitialState: function() {
+    return {popupLogin: this.props.popupLogin, popupRegister: this.props.popupRegister}
+  },
+  handleLoginClick: function(evt) {
+    evt.preventDefault();
+    this.setState({popupLogin: true, popupRegister: false});
+  },
+  handleRegisterClick: function(evt) {
+    evt.preventDefault();
+    this.setState({popupLogin: false, popupRegister: true});
+  },
   render: function() {
+    var inner = null;
+    if (this.state.popupLogin) {
+      inner = <PopupLoginBox onRegisterClick={this.handleRegisterClick} />;
+    } else if (this.state.popupRegister) {
+      inner = <PopupRegisterBox onLoginClick={this.handleLoginClick} />;
+    } else {
+      return false;
+    }
     return (
       <div className="popup-outer" onClick={this.destory}>
-        <div className="popup-inner popup-reg">
-          <h1> 注册花苞儿 </h1>
-          <RegisterForm onRegisterSubmit={this.handleRegister} />
-          <div className="other">
-          <span>已有花苞儿账号?</span><a href="login" className="login" onClick={this.handleLoginClick}>登陆</a></div>
-        </div>
+        {inner}
       </div>
     );
   }
@@ -451,10 +466,10 @@ var InfoBox = React.createClass({
     });
   },
   handleLoginClick: function() {
-    React.renderComponent(<PopupLoginBox />, document.querySelector('#popup'));
+    React.renderComponent(<PopupBox popupLogin={true} />, document.querySelector('#popup'));
   },
   handleRegisterClick: function() {
-    React.renderComponent(<PopupRegisterBox />, document.querySelector('#popup'));
+    React.renderComponent(<PopupBox popupRegister={true} />, document.querySelector('#popup'));
   },
   loadUserInfo: function() {
     var self = this;
@@ -701,7 +716,7 @@ var isLogin = function() {
   if (config.user && config.user.user_id) {
     return true;
   }
-  React.renderComponent(<PopupLoginBox />, document.querySelector('#popup'));
+  React.renderComponent(<PopupBox popupLogin={true} />, document.querySelector('#popup'));
   return false;
 };
 
