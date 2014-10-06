@@ -628,6 +628,9 @@ var CommentForm = React.createClass({
     }
   },
   render: function() {
+    if (!config.user || !config.user.user_id) {
+      return <div className="comment"><h3>登陆后才可以评论哦。。。</h3></div>;
+    }
     return (
       <form className="commentForm clearfix" onSubmit={this.handleSubmit}>
         <div className="placeholder">这里是评论！ </div>
