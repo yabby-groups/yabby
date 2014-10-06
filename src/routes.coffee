@@ -50,7 +50,7 @@ module.exports = (app, yabby) ->
   app.get "/favorite", require_login(), favorite
   app.get "/favorite/p/:page", require_login(), favorite
 
-  app.get "/tweets/new", (req, res) ->
+  app.get "/tweets/new", require_login(), (req, res) ->
     user = if req.user then clean_obj(req.user) else {}
     tweet_id = req.params.tweet_id
     res.render 'new_tweet', {

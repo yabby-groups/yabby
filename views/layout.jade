@@ -22,10 +22,12 @@ html(lang='zh-CN')
         ul.topmenu
           li
             a(href='#{host}') 首页
-          li
-            a(href='#{host}/tweets/new') 发布
-          li
-            a(href='#{host}/favorite') 收藏
+          - if (user && user.user_id) {
+            li
+              a(href='#{host}/tweets/new') 发布
+            li
+              a(href='#{host}/favorite') 收藏
+          - }
       #info
     .split
     section#main
