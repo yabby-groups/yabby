@@ -22,7 +22,7 @@ module.exports = (app, yabby) ->
   app.post "#{api_prefix}/users/register", (req, res) ->
     user = req.body
     yabby.create_user user, (err) ->
-      send_json_response res, err, {}
+      send_json_response res, err, {user: user}
 
   app.post "#{api_prefix}/tweets/", require_login(), (req, res) ->
     tweet = req.body

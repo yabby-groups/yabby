@@ -17,10 +17,12 @@ var FileForm = React.createClass({
     return {};
   },
   handleFile: function() {
+    if (!isLogin()) {return;}
     $(".choose-file").text("正在上传");
     $(this.refs.fileForm.getDOMNode()).submit();
   },
   handleClick: function() {
+    if (!isLogin()) {return;}
     $(this.refs.file.getDOMNode()).click();
   },
   render: function() {
@@ -111,18 +113,21 @@ var TweetItem = React.createClass({
   },
   handleLike: function() {
     var self = this;
+    if (!isLogin()) {return;}
     $.post("/api/tweets/" + this.props.tweet.tweet_id + '/like', function(data) {
       self.setState(data);
     });
   },
   handleUnLike: function() {
     var self = this;
+    if (!isLogin()) {return;}
     $.post("/api/tweets/" + this.props.tweet.tweet_id + '/unlike', function(data) {
       self.setState(data);
     });
   },
   handleFavorite: function() {
     var self = this;
+    if (!isLogin()) {return;}
     $.post("/api/tweets/" + this.props.tweet.tweet_id + '/favorite', function(data) {
       var fav = data.favorite? "fav": "unfav"
       self.setState({favorite: fav});
@@ -130,6 +135,7 @@ var TweetItem = React.createClass({
   },
   handleDelete: function(evt) {
     var self = this;
+    if (!isLogin()) {return;}
     $(self.getDOMNode()).hide();
     $.ajax("/api/tweets/" + this.props.tweet.tweet_id, {method: 'DELETE'}).done(function(data) {});
   },
@@ -218,6 +224,7 @@ var TweetItem = React.createClass({
 var TweetForm = React.createClass({
   handleSubmit: function(e) {
     e.preventDefault();
+    if (!isLogin()) {return;}
     var text = this.refs.text.getDOMNode().value.trim();
     var file_id = this.refs.file_id.getDOMNode().value.trim();
     if (!text) {
@@ -312,8 +319,11 @@ var LoginForm = React.createClass({
   render: function() {
     return (
       <form className="loginForm" onSubmit={this.handleSubmit}>
-        <input type="text" placeholder="username" ref="username" />
-        <input type="password" placeholder="password" ref="passwd" />
+        <label htmlFor="username"> 用户名 </label>
+        <input type="text" placeholder="用户名/邮箱" ref="username" />
+        <label htmlFor="passwd"> 密码 </label>
+        <input type="password" placeholder="密码" ref="passwd" />
+        <label htmlFor="submit"> </label>
         <input type="submit" value="登录" />
       </form>
     )
@@ -321,19 +331,130 @@ var LoginForm = React.createClass({
 });
 
 
-var InfoBox = React.createClass({
+var PopupLoginBox = React.createClass({
   handleLogin: function(info) {
     var self = this;
     $.post('/auth', info, function(data) {
-      self.setState(data);
+      if (data.user) {
+        window.location.reload();
+      } else {
+        window.alert('用户名／密码不正确！');
+      }
     });
   },
+  handleRegisterClick: function(evt) {
+    evt.preventDefault();
+    React.renderComponent(<PopupRegisterBox />, document.querySelector('#popup'));
+  },
+  destory: function(evt) {
+    if (evt.target.className === 'popup-outer') {
+      umountPopup();
+    }
+  },
+  render: function() {
+    return (
+      <div className="popup-outer" onClick={this.destory}>
+        <div className="popup-inner">
+          <h1> 登陆花苞儿 </h1>
+          <LoginForm onLoginSubmit={this.handleLogin} />
+          <div className="other">
+            <a href="/forget_passwd" className="forget_passwd">忘记密码</a>
+            <span>还没有花苞儿账号?</span>
+            <a href="/register" className="register" onClick={this.handleRegisterClick}>点击注册</a></div>
+        </div>
+      </div>
+    );
+  }
+});
+
+
+var RegisterForm = React.createClass({
+  handleSubmit: function(e) {
+    e.preventDefault();
+    var username = this.refs.username.getDOMNode().value.trim();
+    var email = this.refs.email.getDOMNode().value.trim();
+    var passwd = this.refs.passwd.getDOMNode().value.trim();
+    var repasswd = this.refs.repasswd.getDOMNode().value.trim();
+    if (!passwd || !username || !email) {
+      return;
+    }
+    if (repasswd !== passwd) {
+      return;
+    }
+    this.props.onRegisterSubmit({passwd: passwd, username: username, repasswd: repasswd});
+    this.refs.username.getDOMNode().value = '';
+    this.refs.passwd.getDOMNode().value = '';
+    this.refs.repasswd.getDOMNode().value = '';
+    this.refs.email.getDOMNode().value = '';
+    return;
+  },
+  render: function() {
+    return (
+      <form className="registerForm" onSubmit={this.handleSubmit}>
+        <label htmlFor="username"> 用户名 </label>
+        <input type="text" placeholder="用户名" ref="username" />
+        <label htmlFor="email"> 邮箱 </label>
+        <input type="text" placeholder="邮箱" ref="email" />
+        <label htmlFor="passwd"> 密码 </label>
+        <input type="password" placeholder="密码" ref="passwd" />
+        <label htmlFor="repasswd"> 重复密码 </label>
+        <input type="password" placeholder="重复密码" ref="repasswd" />
+        <label htmlFor="submit"> </label>
+        <input type="submit" value="注册" />
+      </form>
+    )
+  }
+});
+
+
+var PopupRegisterBox = React.createClass({
+  handleRegister: function(info) {
+    var self = this;
+    $.post('/api/users/register', info, function(data) {
+      if (data.user) {
+        React.renderComponent(<PopupLoginBox />, document.querySelector('#popup'));
+      } else {
+        window.alert(data.msg);
+      }
+    });
+  },
+  handleLoginClick: function(evt) {
+    evt.preventDefault();
+    React.renderComponent(<PopupLoginBox />, document.querySelector('#popup'));
+  },
+  destory: function(evt) {
+    if (evt.target.className === 'popup-outer') {
+      umountPopup();
+    }
+  },
+  render: function() {
+    return (
+      <div className="popup-outer" onClick={this.destory}>
+        <div className="popup-inner popup-reg">
+          <h1> 注册花苞儿 </h1>
+          <RegisterForm onRegisterSubmit={this.handleRegister} />
+          <div className="other">
+          <span>已有花苞儿账号?</span><a href="login" className="login" onClick={this.handleLoginClick}>登陆</a></div>
+        </div>
+      </div>
+    );
+  }
+});
+
+
+var InfoBox = React.createClass({
   handleLogout: function(evt) {
     var self = this;
     evt.preventDefault();
     $.get('/logout', function() {
-      self.setState({user: null});
+      window.location.reload();
     });
+  },
+  handleLoginClick: function() {
+    React.renderComponent(<PopupLoginBox />, document.querySelector('#popup'));
+  },
+  handleRegisterClick: function() {
+    React.renderComponent(<PopupRegisterBox />, document.querySelector('#popup'));
   },
   loadUserInfo: function() {
     var self = this;
@@ -351,7 +472,12 @@ var InfoBox = React.createClass({
   },
   render: function() {
     if (!this.state.user || !this.state.user.user_id) {
-      return <LoginForm onLoginSubmit={this.handleLogin} />
+      return (
+        <div className="btns">
+          <button onClick={this.handleLoginClick}>登陆</button>
+          <button onClick={this.handleRegisterClick}>注册</button>
+        </div>
+      );
     }
 
     var user = this.state.user;
@@ -363,10 +489,15 @@ var InfoBox = React.createClass({
       avatar = <img src='/static/images/human.png' />
     }
     return (
-      <a href="/logout" onClick={this.handleLogout}>
-        {avatar}
-        {user.username}
-      </a>
+      <div className="btns">
+        <div className='settings'>
+          <a href="/settings">
+            {avatar}
+            {user.username}
+          </a>
+        </div>
+        <button onClick={this.handleLogout}> 登出 </button>
+      </div>
     );
   }
 });
@@ -405,6 +536,7 @@ var CommentItem = React.createClass({
   },
   handleLike: function() {
     var self = this;
+    if (!isLogin()) {return;}
     var commentId = this.props.comment.comment_id;
     var tweetId = this.props.comment.tweet_id;
     $.post("/api/tweets/" + tweetId + '/comments/' + commentId + '/like', function(data) {
@@ -565,3 +697,14 @@ function render_new_tweet() {
     }
   );
 }
+var isLogin = function() {
+  if (config.user && config.user.user_id) {
+    return true;
+  }
+  React.renderComponent(<PopupLoginBox />, document.querySelector('#popup'));
+  return false;
+};
+
+var umountPopup = function(evt) {
+  React.unmountComponentAtNode(document.getElementById('popup'));
+};
