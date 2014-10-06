@@ -375,7 +375,7 @@ var RegisterForm = React.createClass({
     if (repasswd !== passwd) {
       return;
     }
-    this.props.onRegisterSubmit({passwd: passwd, username: username, repasswd: repasswd});
+    this.props.onRegisterSubmit({passwd: passwd, username: username, repasswd: repasswd, email: email});
     this.refs.username.getDOMNode().value = '';
     this.refs.passwd.getDOMNode().value = '';
     this.refs.repasswd.getDOMNode().value = '';
