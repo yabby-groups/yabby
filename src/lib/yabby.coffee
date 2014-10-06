@@ -7,7 +7,7 @@ urlparse = require('url').parse
 _ = require 'underscore'
 fs = require 'fs'
 uuid = require('uuid').v4
-UPYun = require 'upyun'
+UPYUN = require 'upyun'
 
 password_salt = 'IW~#$@Asfk%*(skaADfd3#f@13l!sa9'
 
@@ -16,8 +16,7 @@ hashed_password = (raw_password) ->
 
 class Yabby
   constructor: (@config) ->
-    @upyun = UPYun @config.upyun.bucket, @config.upyun.username, @config.upyun.passwd
-    UPYun.endpoint.setEndpoint UPYun.endpoint.ENDPOINT_V1
+    @upyun = UPYUN @config.upyun.bucket, @config.upyun.operater, @config.upyun.password, @config.upyun.endpoint
 
   create_user: (user, callback) ->
     self = @
@@ -357,18 +356,16 @@ class Yabby
     self = @
     File.findOne {file_key: file.hash}, (err, _file) ->
       return cb null, _file.toJSON() if _file
-      fs.readFile file.path, (err, data) ->
+      self.upyun.uploadFile "/#{bucket}/#{file.hash}", file.path, file.type, (err, headers, data) ->
         return cb err if err
-        self.upyun.uploadFile "/#{bucket}/#{file.hash}", data, (err, status, data) ->
+        return cb data if headers.statusCode isnt 200
+        _file = new File {
+          file_key: file.hash
+          file_bucket: bucket
+        }
+        _file.save (err, _file) ->
           return cb err if err
-          return cb data if status isnt 200
-          _file = new File {
-            file_key: file.hash
-            file_bucket: bucket
-          }
-          _file.save (err, _file) ->
-            return cb err if err
-            cb null, _file.toJSON()
+          cb null, _file.toJSON()
 
   avatar_upload: (file, user_id, callback) ->
     @upload file, 'avatar', (err, data) ->
