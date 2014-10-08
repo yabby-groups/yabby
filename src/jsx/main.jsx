@@ -19,6 +19,7 @@ var FileForm = React.createClass({
   handleFile: function() {
     if (!isLogin()) {return;}
     $(".choose-file").text("正在上传");
+    notify('正在上传图片...')
     $(this.refs.fileForm.getDOMNode()).submit();
   },
   handleClick: function() {
@@ -763,8 +764,13 @@ function render_new_tweet() {
     document.querySelector("#content"),
     function() {
       $(".fileForm").ajaxForm(function(result) {
-        $(".choose-file").text("上传完成");
-        $("#tweetFile").val(result.file.file_id);
+        if (result.file) {
+          $(".choose-file").text("上传完成");
+          $("#tweetFile").val(result.file.file_id);
+        } else {
+          $(".choose-file").text("上传失败");
+        }
+        umountPopup();
       });
     }
   );
