@@ -27,10 +27,12 @@ var FileForm = React.createClass({
   },
   render: function() {
     return (
-      <form className="fileForm" ref="fileForm" encType="multipart/form-data" method="POST" action="/api/upload">
+      <div className="fileForm">
         <button className="choose-file" onClick={this.handleClick}> 选择图片 </button>
-        <input ref="file" type="file" name="file" onChange={this.handleFile} />
-      </form>
+        <form ref="fileForm" encType="multipart/form-data" method="POST" action="/api/upload">
+          <input ref="file" type="file" name="file" onChange={this.handleFile} />
+        </form>
+      </div>
     );
   }
 });
