@@ -790,7 +790,7 @@ var umountPopup = function(evt) {
 var notify = function(message, opts, callback) {
   if (typeof opts === 'function') {
     callback = opts;
-    opts = {};
+    opts = {hasOkBtn: true, hasCloseBtn: true};
   }
   opts = opts || {};
   React.renderComponent(<NotifyBox onOKClick={callback} message={message} hasCloseBtn={opts.hasCloseBtn} hasOkBtn={opts.hasOkBtn} />,
