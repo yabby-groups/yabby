@@ -521,10 +521,10 @@ var InfoBox = React.createClass({
     });
   },
   handleLoginClick: function() {
-    React.renderComponent(<PopupBox popupLogin={true} />, document.querySelector('#popup'));
+    React.renderComponent(<PopupBox popupLogin={true} />, document.getElementById('popup'));
   },
   handleRegisterClick: function() {
-    React.renderComponent(<PopupBox popupRegister={true} />, document.querySelector('#popup'));
+    React.renderComponent(<PopupBox popupRegister={true} />, document.getElementById('popup'));
   },
   loadUserInfo: function() {
     var self = this;
@@ -735,14 +735,14 @@ var CommentBox = React.createClass({
 function render_tweets() {
   React.renderComponent(
     <TweetBox />,
-    document.querySelector("#content")
+    document.getElementById("content")
   );
 }
 
 function render_info() {
   React.renderComponent(
     <InfoBox />,
-    document.querySelector("#info")
+    document.getElementById("info")
   );
 }
 
@@ -750,7 +750,7 @@ function render_info() {
 function render_tweet() {
   React.renderComponent(
     <OneTweetBox />,
-    document.querySelector("#content")
+    document.getElementById("content")
   );
 }
 
@@ -761,7 +761,7 @@ function render_new_tweet() {
       <FileForm />
       <TweetForm />
     </div>,
-    document.querySelector("#content"),
+    document.getElementById("content"),
     function() {
       $(".fileForm").ajaxForm(function(result) {
         if (result.file) {
@@ -779,7 +779,7 @@ var isLogin = function() {
   if (config.user && config.user.user_id) {
     return true;
   }
-  React.renderComponent(<PopupBox popupLogin={true} />, document.querySelector('#popup'));
+  React.renderComponent(<PopupBox popupLogin={true} />, document.getElementById('popup'));
   return false;
 };
 
@@ -794,5 +794,5 @@ var notify = function(message, opts, callback) {
   }
   opts = opts || {};
   React.renderComponent(<NotifyBox onOKClick={callback} message={message} hasCloseBtn={opts.hasCloseBtn} hasOkBtn={opts.hasOkBtn} />,
-      document.querySelector('#popup'));
+      document.getElementById('popup'));
 };
