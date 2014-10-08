@@ -136,8 +136,10 @@ var TweetItem = React.createClass({
   handleDelete: function(evt) {
     var self = this;
     if (!isLogin()) {return;}
-    $(self.getDOMNode()).hide();
-    $.ajax("/api/tweets/" + this.props.tweet.tweet_id, {method: 'DELETE'}).done(function(data) {});
+    notify('确定删除？', function() {
+      $(self.getDOMNode()).hide();
+      $.ajax("/api/tweets/" + self.props.tweet.tweet_id, {method: 'DELETE'}).done(function(data) {});
+    });
   },
   render: function() {
     var tweet = this.props.tweet || {};
@@ -470,6 +472,35 @@ var PopupBox = React.createClass({
 });
 
 
+var NotifyBox = React.createClass({
+  destory: function() {
+    umountPopup();
+  },
+  handleClick: function() {
+    if (this.props.onOKClick) {
+      this.props.onOKClick();
+    }
+    umountPopup();
+  },
+  render: function() {
+    return (
+      <div className="popup-outer">
+        <div className="popup-inner popup-notify">
+          <span className="close" onClick={this.destory}>&times;</span>
+          <div className="title">
+            提示:
+          </div>
+          <div className="message">
+            {this.props.message}
+            <button className="right" onClick={this.handleClick}>确定</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+});
+
+
 var InfoBox = React.createClass({
   handleLogout: function(evt) {
     var self = this;
@@ -738,4 +769,8 @@ var isLogin = function() {
 
 var umountPopup = function(evt) {
   React.unmountComponentAtNode(document.getElementById('popup'));
+};
+
+var notify = function(message, callback) {
+  React.renderComponent(<NotifyBox onOKClick={callback} message={message} />, document.querySelector('#popup'));
 };
