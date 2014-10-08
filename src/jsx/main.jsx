@@ -485,16 +485,24 @@ var NotifyBox = React.createClass({
     umountPopup();
   },
   render: function() {
+    var closeBtn = null;
+    if (this.props.hasCloseBtn) {
+      closeBtn = <span className="close" onClick={this.destory}>&times;</span>;
+    }
+    var okBtn = null;
+    if (this.props.hasOkBtn) {
+      okBtn = <button className="right" onClick={this.handleClick}>确定</button>;
+    }
     return (
       <div className="popup-outer">
         <div className="popup-inner popup-notify">
-          <span className="close" onClick={this.destory}>&times;</span>
+          {closeBtn}
           <div className="title">
             提示:
           </div>
           <div className="message">
             {this.props.message}
-            <button className="right" onClick={this.handleClick}>确定</button>
+            {okBtn}
           </div>
         </div>
       </div>
@@ -773,6 +781,12 @@ var umountPopup = function(evt) {
   React.unmountComponentAtNode(document.getElementById('popup'));
 };
 
-var notify = function(message, callback) {
-  React.renderComponent(<NotifyBox onOKClick={callback} message={message} />, document.querySelector('#popup'));
+var notify = function(message, opts, callback) {
+  if (typeof opts === 'function') {
+    callback = opts;
+    opts = {};
+  }
+  opts = opts || {};
+  React.renderComponent(<NotifyBox onOKClick={callback} message={message} hasCloseBtn={opts.hasCloseBtn} hasOkBtn={opts.hasOkBtn} />,
+      document.querySelector('#popup'));
 };
