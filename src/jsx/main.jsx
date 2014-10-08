@@ -345,6 +345,7 @@ var PopupLogin = React.createClass({
   render: function() {
     return (
       <div className="popup-inner">
+        <span className="close">&times;</span>
         <h1> 登陆花苞儿 </h1>
         <LoginForm onLoginSubmit={this.handleLogin} />
         <div className="other">
@@ -415,6 +416,7 @@ var PopupRegister = React.createClass({
   render: function() {
     return (
       <div className="popup-inner popup-reg">
+        <span className="close">&times;</span>
         <h1> 注册花苞儿 </h1>
         <RegisterForm onRegisterSubmit={this.handleRegister} />
         <div className="other">
@@ -431,7 +433,7 @@ var PopupRegister = React.createClass({
 
 var PopupBox = React.createClass({
   destory: function(evt) {
-    if (evt.target.className === 'popup-outer') {
+    if (evt.target.className === 'popup-outer' || evt.target.className === 'close') {
       umountPopup();
     }
   },
