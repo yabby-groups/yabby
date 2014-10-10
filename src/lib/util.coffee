@@ -7,6 +7,7 @@ clean_obj = exports.clean_obj = (obj) ->
   obj = omit obj
   obj.file = omit obj.file if obj.file
   obj.user = clean_obj obj.user if obj.user
+  obj.avatar = clean_obj obj.avatar if obj.avatar
   obj.tweet = clean_obj obj.tweet if obj.tweet
   if obj.tweets
       obj.tweets = _.map obj.tweets, (obj) ->
