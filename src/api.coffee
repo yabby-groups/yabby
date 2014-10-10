@@ -157,7 +157,8 @@ module.exports = (app, yabby) ->
     form.parse req, (err,fields, files) ->
       return send_json_response res, 'please choose file' unless files.file
       yabby.avatar_upload files.file, req.user.user_id, (err, data) ->
-        send_json_response res, err, file: data
+        req.session.user.avatar = data
+        send_json_response res, err, avatar: data
 
   app.get "#{api_prefix}/channel/:urlname_or_channel_id/tweets", (req, res) ->
     urlname_or_channel_id = req.params.urlname_or_channel_id
