@@ -74,3 +74,12 @@ module.exports = (app, yabby) ->
       delete req.session.user
 
     res.json {}
+
+
+  app.get "/settings", require_login(), (req, res) ->
+    user = if req.user then clean_obj(req.user) else {}
+    res.render 'settings', {
+      user: user
+      api: "/api/users/me"
+      url: "/settings"
+    }

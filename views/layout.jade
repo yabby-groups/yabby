@@ -33,11 +33,12 @@ html(lang='zh-CN')
     section#main
       #content(role='main')
       #sidebar.widget-area(role='complementary')
-        aside.widget.clearfix.widget_search
-          h3.widget-title &#x7AD9;&#x5185;&#x641C;&#x56FE;
-          form#searchform(method='get', action='#')
-            input#s(type='text', name='s', placeholder='搜索...')
-            input#searchsubmit(type='submit', name='submit', value='搜索')
+        block sidebar
+          aside.widget.clearfix.widget_search
+            h3.widget-title &#x7AD9;&#x5185;&#x641C;&#x56FE;
+            form#searchform(method='get', action='#')
+              input#s(type='text', name='s', placeholder='搜索...')
+              input#searchsubmit(type='submit', name='submit', value='搜索')
     #popup
     footer(role='contentinfo')
       | &copy; 2007-2014 &nbsp;

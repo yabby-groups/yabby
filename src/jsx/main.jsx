@@ -27,10 +27,11 @@ var FileForm = React.createClass({
     $(this.refs.file.getDOMNode()).click();
   },
   render: function() {
+    var action = this.props.action || "/api/upload"
     return (
       <div className="fileForm">
         <button className="choose-file" onClick={this.handleClick}> 选择图片 </button>
-        <form ref="fileForm" encType="multipart/form-data" method="POST" action="/api/upload">
+        <form ref="fileForm" encType="multipart/form-data" method="POST" action={action}>
           <input ref="file" type="file" name="file" onChange={this.handleFile} />
         </form>
       </div>
@@ -171,8 +172,8 @@ var TweetItem = React.createClass({
     }
 
     var avatar;
-    if (tweet.user && tweet.user.file) {
-      avatar  = <FileItem file={tweet.user.file} />;
+    if (tweet.user && tweet.user.avatar) {
+      avatar  = <FileItem file={tweet.user.avatar} />;
     } else {
       avatar = <img src='/static/images/human.png' />
     }
@@ -553,8 +554,8 @@ var InfoBox = React.createClass({
     var user = this.state.user;
 
     var avatar;
-    if (user.file) {
-      avatar  = <FileItem file={user.file} />;
+    if (user.avatar) {
+      avatar  = <FileItem file={user.avatar} />;
     } else {
       avatar = <img src='/static/images/human.png' />
     }
@@ -625,8 +626,8 @@ var CommentItem = React.createClass({
     var user = comment.user || {};
 
     var avatar;
-    if (user.file) {
-      avatar  = <FileItem file={user.file} />;
+    if (user.avatar) {
+      avatar  = <FileItem file={user.avatar} />;
     } else {
       avatar = <img src='/static/images/human.png' />
     }
@@ -732,6 +733,23 @@ var CommentBox = React.createClass({
 });
 
 
+var Avatar = React.createClass({
+  render: function() {
+    var user = config.user;
+    if (user.avatar) {
+      avatar  = <FileItem file={user.avatar} />;
+    } else {
+      avatar = <img src='/static/images/human.png' />
+    }
+    return (
+      <div className="avatar">
+        {avatar}
+      </div>
+    );
+  }
+});
+
+
 function render_tweets() {
   React.renderComponent(
     <TweetBox />,
@@ -775,6 +793,29 @@ function render_new_tweet() {
     }
   );
 }
+
+function render_edit_avatar() {
+  React.renderComponent(
+    <div className="avatarBox">
+      <FileForm action="/api/avatar_upload"/>
+      <Avatar />
+    </div>,
+    document.getElementById("content"),
+    function() {
+      $(".fileForm").ajaxForm(function(result) {
+        if (result.avatar) {
+          $(".choose-file").text("上传完成");
+          var file = result.avatar;
+          $(".avatar").html('<img src=' + config.img_host + '/' + file.file_bucket + '/' + file.file_key + ' />');
+        } else {
+          $(".choose-file").text("上传失败");
+        }
+        umountPopup();
+      });
+    }
+  );
+}
+
 var isLogin = function() {
   if (config.user && config.user.user_id) {
     return true;
