@@ -2,6 +2,9 @@ extends layout
 block config
   script.
     var config = {
+      current: #{current},
+      total: #{total},
+      limit: #{limit},
       api: '#{api}',
       url: '#{url}',
       img_host: '#{img_host}',
@@ -13,8 +16,7 @@ block sidebar
   include sidebar
 
 block render
-  script(src="/static/js/jquery.form.js")
   script.
     render_info();
-    render_edit_avatar();
-    $("#sidebar .menu .settings").addClass('active');
+    render_tweets();
+    $("#sidebar .menu .tweet").addClass('active');

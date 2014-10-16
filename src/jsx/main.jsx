@@ -173,7 +173,7 @@ var TweetItem = React.createClass({
 
     var avatar;
     if (tweet.user && tweet.user.avatar) {
-      avatar  = <FileItem file={tweet.user.avatar} />;
+      avatar = <FileItem file={tweet.user.avatar} />;
     } else {
       avatar = <img src='/static/images/human.png' />
     }
@@ -733,7 +733,19 @@ var CommentBox = React.createClass({
 });
 
 
-var Avatar = React.createClass({
+var UserInfo = React.createClass({
+  handleSave: function(e) {
+    e.preventDefault();
+    var username = this.refs.username.getDOMNode().value.trim();
+    var passwd = this.refs.passwd.getDOMNode().value.trim();
+    if (!passwd || !username) {
+      return;
+    }
+    this.props.onLoginSubmit({passwd: passwd, username: username});
+    this.refs.username.getDOMNode().value = '';
+    this.refs.passwd.getDOMNode().value = '';
+    return;
+  },
   render: function() {
     var user = config.user;
     if (user.avatar) {
@@ -742,8 +754,22 @@ var Avatar = React.createClass({
       avatar = <img src='/static/images/human.png' />
     }
     return (
-      <div className="avatar">
-        {avatar}
+      <div className="avatarBox">
+        <form className="loginForm" onSubmit={this.handleSubmit}>
+          <label htmlFor="oldpasswd"> 旧密码 </label>
+          <input type="password" ref="oldpasswd" />
+          <label htmlFor="passwd"> 新密码 </label>
+          <input type="password" ref="passwd" />
+          <label htmlFor="submit"> </label>
+          <label htmlFor="passwd"> 重复新密码 </label>
+          <input type="password" ref="repasswd" />
+          <input type="submit" value="修改" />
+        </form>
+        <label htmlFor="passwd"> 头像 </label>
+        <div className="avatar">
+            {avatar}
+            <FileForm action="/api/avatar_upload"/>
+        </div>
       </div>
     );
   }
@@ -796,10 +822,7 @@ function render_new_tweet() {
 
 function render_edit_avatar() {
   React.renderComponent(
-    <div className="avatarBox">
-      <FileForm action="/api/avatar_upload"/>
-      <Avatar />
-    </div>,
+    <UserInfo />,
     document.getElementById("content"),
     function() {
       $(".fileForm").ajaxForm(function(result) {

@@ -34,7 +34,7 @@ module.exports = (app, yabby) ->
     limit = 100 if limit > 100
     user = if req.user then clean_obj(req.user) else {}
     Favorite.count {user_id: user.user_id}, (err, total) ->
-      res.render 'index', {
+      res.render 'favorite', {
         current: page
         total: total
         limit: limit
@@ -43,9 +43,28 @@ module.exports = (app, yabby) ->
         url: "/favorite"
       }
 
+  user_tweets = (req, res) ->
+    page = req.params.page or 1
+    user_id = req.params.user_id
+    limit = if req.query.limit then Number(req.query.limit) else 10
+    limit = 100 if limit > 100
+    user = if req.user then clean_obj(req.user) else {}
+    Tweet.count {user_id: user_id}, (err, total) ->
+      res.render 'user_tweet', {
+        current: page
+        total: total
+        limit: limit
+        user: user
+        api: "/api/users/#{user_id}/tweets"
+        url: "/users/#{user_id}"
+      }
+
 
   app.get "/", index
   app.get "/p/:page", index
+
+  app.get "/users/:user_id", user_tweets
+  app.get "/users/:user_id/p/:page", user_tweets
 
   app.get "/favorite", require_login(), favorite
   app.get "/favorite/p/:page", require_login(), favorite

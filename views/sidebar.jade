@@ -1,0 +1,19 @@
+aside.clearfix.userinfo
+  div.avatar
+    if user.avatar
+      img(src=img_host + '/' + user.avatar.file_bucket + '/' + user.avatar.file_key)
+    else
+      img(src="/static/images/human.png")
+  div.username
+    h3 #{user.username}
+aside.clearfix.menu
+  ul
+    li.tweet
+      a(href="/users/" + user.user_id) 我的发帖
+    li.favorite
+      a(href="/favorite") 我的收藏
+    li.settings
+      a(href="/settings") 修改个人资料
+    li.help
+      a(href="help") 帮助
+
