@@ -562,7 +562,7 @@ var InfoBox = React.createClass({
     return (
       <div className="btns">
         <div className='settings'>
-          <a href="/settings">
+          <a href="/favorite">
             {avatar}
             {user.username}
           </a>
