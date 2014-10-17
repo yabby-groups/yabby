@@ -24,6 +24,12 @@ module.exports = (app, yabby) ->
     yabby.create_user user, (err) ->
       send_json_response res, err, {user: user}
 
+  app.post "#{api_prefix}/users/passwd", require_login(), (req, res) ->
+    pwds = req.body
+    pwds.user_id = req.user.user_id
+    yabby.change_passwd pwds, (err) ->
+      send_json_response res, err, {result: "success"}
+
   app.post "#{api_prefix}/tweets/", require_login(), (req, res) ->
     tweet = req.body
     tweet.user_id = req.user.user_id

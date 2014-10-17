@@ -850,7 +850,7 @@ aside{
   }
 }
 
-.avatarBox {
+.userInfo {
   .text_bg();
   clear: both;
   width: 700px;
@@ -864,11 +864,64 @@ aside{
   -moz-box-shadow: inset 0 0 0 1px #fff,0 1px 2px #ddd;
   box-shadow: inset 0 0 0 1px #fff,0 1px 2px #ddd;
   position: relative;
-  ul {
-    li {
-      list-style: None;
-      font-size: 14pt;
-      padding: 5px;
+  .entry-header {
+    position: relative;
+    border-bottom: 1px dotted #ccc;
+    margin-bottom: 10px;
+    padding: 0 0 10px;
+    &:after {
+      content: '';
+      display: block;
+      width: 1px;
+      height: 42px;
+      border-left: 5px solid black;
+      border-right: 5px solid #EEE;
+      position: absolute;
+      left: -15px;
+      top: -2px;
+      background:#CCC;
+    }
+    h3 {
+      font-size: 2em;
+    }
+  }
+  label {
+    display: block;
+    font-size: 1.5em;
+    margin-top: 10px;
+  }
+  .userInfoForm {
+    border-bottom: 1px dotted #ccc;
+    padding-bottom: 10px;
+    input {
+      .input_box();
+    }
+    .btns {
+      position: relative;
+      margin-top: 10px;
+      button {
+        width: 50px;
+        height: 30px;
+        border: 1px solid #bbb;
+        top: 2px;
+        right: 2px;
+        cursor: pointer;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        -webkit-box-shadow: inset 1px 1px 0 #eee,0 1px 0 #fff;
+        -moz-box-shadow: inset 1px 1px 0 #eee,0 1px 0 #fff;
+        box-shadow: inset 1px 1px 0 #eee,0 1px 0 #fff;
+        background: #E2E1E1;
+        &:hover {
+          opacity: 0.7;
+        }
+        &.cancel {
+          top: 0;
+          position: absolute;
+          left: 171px;
+        }
+      }
     }
   }
   .avatar {
@@ -878,6 +931,8 @@ aside{
     border: 1px solid #ccc;
     margin-top: -25px;
     margin-bottom: 100px;
+    position: relative;
+    border-bottom: 1px dotted #ccc;
     img {
       width: 100%;
       height: 100%;
@@ -910,10 +965,6 @@ aside{
       &:hover {
         opacity: 0.7;
       }
-
-      position: absolute;
-      top: 220px;
-      left: 148px;
     }
     form {
       visibility: hidden;

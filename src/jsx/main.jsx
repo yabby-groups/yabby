@@ -736,15 +736,45 @@ var CommentBox = React.createClass({
 var UserInfo = React.createClass({
   handleSave: function(e) {
     e.preventDefault();
-    var username = this.refs.username.getDOMNode().value.trim();
     var passwd = this.refs.passwd.getDOMNode().value.trim();
-    if (!passwd || !username) {
-      return;
+    var oldpasswd = this.refs.oldpasswd.getDOMNode().value.trim();
+    var repasswd = this.refs.repasswd.getDOMNode().value.trim();
+    if (!oldpasswd) {
+      notify('请输入旧密码', {hasCloseBtn: true, hasOkBtn: true});
+      return
     }
-    this.props.onLoginSubmit({passwd: passwd, username: username});
-    this.refs.username.getDOMNode().value = '';
-    this.refs.passwd.getDOMNode().value = '';
+    if (!passwd) {
+      notify('请输入新密码', {hasCloseBtn: true, hasOkBtn: true});
+      return
+    }
+    if (passwd === repasswd) {
+      notify('两次输入密码不一样', {hasCloseBtn: true, hasOkBtn: true});
+      return
+    }
+    $.post("/api/users/passwd", {
+      passwd: passwd,
+      oldpasswd: oldpasswd,
+      repasswd: repasswd
+    }, function(data) {
+      if (data.err) {
+        notify(data.msg, {hasCloseBtn: true, hasOkBtn: true});
+      } else {
+        notify('修改成功', {hasCloseBtn: true, hasOkBtn: true});
+        this.refs.passwd.getDOMNode().value = '';
+        this.refs.repasswd.getDOMNode().value = '';
+        this.refs.oldpasswd.getDOMNode().value = '';
+      }
+    });
     return;
+  },
+  handleCancel: function(e) {
+    e.preventDefault();
+    var self = this;
+    notify('确定取消', function () {
+      self.refs.passwd.getDOMNode().value = '';
+      self.refs.repasswd.getDOMNode().value = '';
+      self.refs.oldpasswd.getDOMNode().value = '';
+    });
   },
   render: function() {
     var user = config.user;
@@ -754,8 +784,18 @@ var UserInfo = React.createClass({
       avatar = <img src='/static/images/human.png' />
     }
     return (
-      <div className="avatarBox">
-        <form className="loginForm" onSubmit={this.handleSubmit}>
+      <div className="userInfo">
+        <header className="entry-header">
+          <h3 className="entry-title">
+          修改个人资料
+          </h3>
+        </header>
+        <label htmlFor="passwd"> 头像 </label>
+        <div className="avatar">
+            {avatar}
+            <FileForm action="/api/avatar_upload"/>
+        </div>
+        <form className="userInfoForm">
           <label htmlFor="oldpasswd"> 旧密码 </label>
           <input type="password" ref="oldpasswd" />
           <label htmlFor="passwd"> 新密码 </label>
@@ -763,13 +803,11 @@ var UserInfo = React.createClass({
           <label htmlFor="submit"> </label>
           <label htmlFor="passwd"> 重复新密码 </label>
           <input type="password" ref="repasswd" />
-          <input type="submit" value="修改" />
+          <div htmlFor="submit" className="btns">
+            <button onClick={this.handleSave}>保存</button>
+            <button className="cancel" onClick={this.handleCancel}>取消</button>
+          </div>
         </form>
-        <label htmlFor="passwd"> 头像 </label>
-        <div className="avatar">
-            {avatar}
-            <FileForm action="/api/avatar_upload"/>
-        </div>
       </div>
     );
   }
