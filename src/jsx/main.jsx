@@ -314,13 +314,15 @@ var LoginForm = React.createClass({
     e.preventDefault();
     var username = this.refs.username.getDOMNode().value.trim();
     var passwd = this.refs.passwd.getDOMNode().value.trim();
-    if (!passwd || !username) {
-      return;
+    if (!username) {
+      notify('请输入用户名/邮箱', {hasCloseBtn: true, hasOkBtn: true});
+      return
+    }
+    if (!passwd) {
+      notify('请输入密码', {hasCloseBtn: true, hasOkBtn: true});
+      return
     }
     this.props.onLoginSubmit({passwd: passwd, username: username});
-    this.refs.username.getDOMNode().value = '';
-    this.refs.passwd.getDOMNode().value = '';
-    return;
   },
   render: function() {
     return (
@@ -344,7 +346,7 @@ var PopupLogin = React.createClass({
       if (data.user) {
         window.location.reload();
       } else {
-        window.alert('用户名／密码不正确！');
+        notify('用户名／密码不正确！', {hasCloseBtn: true, hasOkBtn: true});
       }
     });
   },
@@ -376,18 +378,23 @@ var RegisterForm = React.createClass({
     var email = this.refs.email.getDOMNode().value.trim();
     var passwd = this.refs.passwd.getDOMNode().value.trim();
     var repasswd = this.refs.repasswd.getDOMNode().value.trim();
-    if (!passwd || !username || !email) {
-      return;
+    if (!username) {
+      notify('请输入用户名', {hasCloseBtn: true, hasOkBtn: true});
+      return
     }
-    if (repasswd !== passwd) {
-      return;
+    if (!email) {
+      notify('请输入邮箱地址', {hasCloseBtn: true, hasOkBtn: true});
+      return
+    }
+    if (!passwd) {
+      notify('请输入密码', {hasCloseBtn: true, hasOkBtn: true});
+      return
+    }
+    if (passwd === repasswd) {
+      notify('两次输入密码不一样', {hasCloseBtn: true, hasOkBtn: true});
+      return
     }
     this.props.onRegisterSubmit({passwd: passwd, username: username, repasswd: repasswd, email: email});
-    this.refs.username.getDOMNode().value = '';
-    this.refs.passwd.getDOMNode().value = '';
-    this.refs.repasswd.getDOMNode().value = '';
-    this.refs.email.getDOMNode().value = '';
-    return;
   },
   render: function() {
     return (
@@ -413,9 +420,11 @@ var PopupRegister = React.createClass({
     var self = this;
     $.post('/api/users/register', info, function(data) {
       if (data.user) {
-        self.props.onLoginClick();
+        notify('注册成功，返回登录', function() {
+          self.props.onLoginClick();
+        });
       } else {
-        window.alert(data.msg);
+        notify(data.msg, {hasCloseBtn: true, hasOkBtn: true});
       }
     });
   },
@@ -478,13 +487,13 @@ var PopupBox = React.createClass({
 
 var NotifyBox = React.createClass({
   destory: function() {
-    umountPopup();
+    umountNotify();
   },
   handleClick: function() {
     if (this.props.onOKClick) {
       this.props.onOKClick();
     }
-    umountPopup();
+    umountNotify();
   },
   render: function() {
     var closeBtn = null;
@@ -896,5 +905,9 @@ var notify = function(message, opts, callback) {
   }
   opts = opts || {};
   React.renderComponent(<NotifyBox onOKClick={callback} message={message} hasCloseBtn={opts.hasCloseBtn} hasOkBtn={opts.hasOkBtn} />,
-      document.getElementById('popup'));
+      document.getElementById('popup-notify'));
+};
+
+var umountNotify = function(evt) {
+  React.unmountComponentAtNode(document.getElementById('popup-notify'));
 };
