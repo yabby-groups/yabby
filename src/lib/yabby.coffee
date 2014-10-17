@@ -62,7 +62,7 @@ class Yabby
   change_passwd: (pwds, callback) ->
     return callback 'old password is invalid' unless pwds.oldpasswd
     return callback 'password is required' unless pwds.passwd
-    return callback 'the two new password is not same' unless pwds.passwd is pwds.repasswd
+    return callback 'the two new password is not same' if pwds.passwd isnt pwds.repasswd
     oldhash = hashed_password pwds.oldpasswd
     hash = hashed_password pwds.passwd
     Passwd.findOneAndUpdate {user_id: pwds.user_id, passwd: oldhash}, null, {passwd: hash}, (err, pwd) ->

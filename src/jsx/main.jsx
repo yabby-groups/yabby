@@ -389,7 +389,7 @@ var RegisterForm = React.createClass({
       notify('请输入密码', {hasCloseBtn: true, hasOkBtn: true});
       return
     }
-    if (passwd === repasswd) {
+    if (passwd !== repasswd) {
       notify('两次输入密码不一样', {hasCloseBtn: true, hasOkBtn: true});
       return
     }
@@ -754,7 +754,7 @@ var UserInfo = React.createClass({
       notify('请输入新密码', {hasCloseBtn: true, hasOkBtn: true});
       return
     }
-    if (passwd === repasswd) {
+    if (passwd !== repasswd) {
       notify('两次输入密码不一样', {hasCloseBtn: true, hasOkBtn: true});
       return
     }
