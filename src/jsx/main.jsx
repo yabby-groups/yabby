@@ -293,10 +293,9 @@ var TweetBox = React.createClass({
     });
   },
   getInitialState: function() {
-    return {tweets: [], current: config.current, total: config.total, limit: config.limit};
+    return {tweets: config.tweets, current: config.current, total: config.total, limit: config.limit};
   },
   componentDidMount: function() {
-    this.loadTweetsFromServer();
   },
   render: function() {
     return (
@@ -591,10 +590,9 @@ var OneTweetBox = React.createClass({
     });
   },
   getInitialState: function() {
-    return {tweet: {}};
+    return {tweet: config.tweet};
   },
   componentDidMount: function() {
-    this.loadTweetFromServer();
   },
   render: function() {
     return (
