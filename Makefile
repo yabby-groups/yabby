@@ -1,8 +1,8 @@
 all: public/static/js/main.js public/static/style.css
 	@cake build
 
-public/static/js/main.js: src/jsx/main.jsx
-	jsx $^ > $@
+public/static/js/main.js: src/jsx/main.jsx src/lib/util.coffee
+	jsx src/jsx/main.jsx > $@
 	browserify $@ -o /tmp/bounde.js
 	uglifyjs /tmp/bounde.js -m -r '$$' > $@
 

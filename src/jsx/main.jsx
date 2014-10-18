@@ -1,6 +1,9 @@
 /** @jsx React.DOM */
 
 var React = require('react');
+var is_email = function(string) {
+  return /^[a-z]([a-z0-9]*[-_]?[a-z0-9]+)*@([a-z0-9]*[-_]?[a-z0-9]+)+[\.][a-z]{2,3}([\.][a-z]{2})?$/i.exec(string);
+};
 
 var FileItem = React.createClass({
   render: function() {
@@ -381,6 +384,10 @@ var RegisterForm = React.createClass({
     }
     if (!email) {
       notify('请输入邮箱地址', {hasCloseBtn: true, hasOkBtn: true});
+      return
+    }
+    if (!is_email(email)) {
+      notify('请输入正确的邮箱地址', {hasCloseBtn: true, hasOkBtn: true});
       return
     }
     if (!passwd) {
