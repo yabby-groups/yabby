@@ -2,11 +2,6 @@
 
 var React = require('react');
 
-if (!config) {
-  var config = {};
-}
-
-
 var FileItem = React.createClass({
   render: function() {
     var file = this.props.file || {};
@@ -862,7 +857,7 @@ function render_new_tweet() {
         } else {
           $(".choose-file").text("上传失败");
         }
-        umountPopup();
+        umountNotify();
       });
     }
   );
@@ -881,7 +876,7 @@ function render_edit_avatar() {
         } else {
           $(".choose-file").text("上传失败");
         }
-        umountPopup();
+        umountNotify();
       });
     }
   );
@@ -912,3 +907,9 @@ var notify = function(message, opts, callback) {
 var umountNotify = function(evt) {
   React.unmountComponentAtNode(document.getElementById('popup-notify'));
 };
+
+window.render_tweets = render_tweets;
+window.render_info = render_info;
+window.render_tweet = render_tweet;
+window.render_new_tweet = render_new_tweet;
+window.render_edit_avatar = render_edit_avatar;
