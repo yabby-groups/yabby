@@ -20,5 +20,6 @@
     , "express-session": "*"
     , "method-override": "*"
     , "serve-favicon": "*"
+    , "react": "*"
   }
 }

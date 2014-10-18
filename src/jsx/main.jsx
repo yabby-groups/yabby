@@ -1,8 +1,11 @@
 /** @jsx React.DOM */
 
+var React = require('react');
+
 if (!config) {
   var config = {};
 }
+
 
 var FileItem = React.createClass({
   render: function() {
