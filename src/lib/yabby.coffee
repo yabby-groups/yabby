@@ -8,6 +8,7 @@ _ = require 'underscore'
 fs = require 'fs'
 uuid = require('uuid').v4
 UPYUN = require 'upyun'
+{is_email} = require 'util'
 
 password_salt = 'IW~#$@Asfk%*(skaADfd3#f@13l!sa9'
 
@@ -304,13 +305,19 @@ class Yabby
 
   do_auth: (username, passwd, callback) ->
     self = @
-    User.findOne {username: username}, 'user_id', (err, user) ->
-      return callback 'User not found' unless user
-      Passwd.findOne {user_id: user.user_id}, 'passwd', (err, pwd) ->
-        return callback 'passwd not found' unless pwd
-        hash = hashed_password passwd
+    hash = hashed_password passwd
+    if is_email(username)
+      Passwd.findOne {email: username}, (err, pwd) ->
+        return callback 'user or passwd not found' unless pwd
         return callback 'passwd not match' if hash isnt pwd.passwd
-        self.get_user user.user_id, callback
+        self.get_user pwd.user_id, callback
+    else
+      User.findOne {username: username}, 'user_id', (err, user) ->
+        return callback 'User not found' unless user
+        Passwd.findOne {user_id: user.user_id}, 'passwd', (err, pwd) ->
+          return callback 'passwd not found' unless pwd
+          return callback 'passwd not match' if hash isnt pwd.passwd
+          self.get_user user.user_id, callback
 
   require_login: () ->
     return (req, res, next) ->

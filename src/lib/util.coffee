@@ -16,3 +16,5 @@ clean_obj = exports.clean_obj = (obj) ->
 
   return obj
 
+is_email = exports.is_email = (string) ->
+  return /^[a-z]([a-z0-9]*[-_]?[a-z0-9]+)*@([a-z0-9]*[-_]?[a-z0-9]+)+[\.][a-z]{2,3}([\.][a-z]{2})?$/i.exec(string)
