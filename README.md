@@ -1,7 +1,5 @@
 Build
 -----
 
-    npm install -g react-tools
-    npm install -g coffee-script
-    npm install -g less
+    npm install -g react-tools coffee-script less browserify uglifyjs
     make
