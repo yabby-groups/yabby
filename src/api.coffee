@@ -21,7 +21,9 @@ module.exports = (app, yabby) ->
 
   app.post "#{api_prefix}/users/register", (req, res) ->
     user = req.body
-    yabby.create_user user, (err) ->
+    yabby.create_user user, (err, user) ->
+      if user and user.user_id
+        req.session.user = user
       send_json_response res, err, {user: user}
 
   app.post "#{api_prefix}/users/passwd", require_login(), (req, res) ->

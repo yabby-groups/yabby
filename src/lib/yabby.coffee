@@ -44,10 +44,11 @@ class Yabby
           email: user.email
           passwd: hash
         }
+        user = u
         pwd.save (err, pwd, count) ->
           next err, pwd
     ], (err, result) ->
-      callback err
+      callback err, user
 
   get_user: (user_id, callback) ->
     User.findOne user_id: user_id, (err, user) ->

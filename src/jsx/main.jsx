@@ -424,8 +424,8 @@ var PopupRegister = React.createClass({
     var self = this;
     $.post('/api/users/register', info, function(data) {
       if (data.user) {
-        notify('注册成功，返回登录', function() {
-          self.props.onLoginClick();
+        notify('注册成功', function() {
+          window.location.reload();
         });
       } else {
         notify(data.msg, {hasCloseBtn: true, hasOkBtn: true});
