@@ -8,7 +8,7 @@ _ = require 'underscore'
 fs = require 'fs'
 uuid = require('uuid').v4
 UPYUN = require 'upyun'
-{is_email} = require 'util'
+{is_email} = require './util'
 
 password_salt = 'IW~#$@Asfk%*(skaADfd3#f@13l!sa9'
 
