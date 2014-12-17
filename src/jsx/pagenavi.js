@@ -1,8 +1,5 @@
 var Pagenavi = module.exports = React.createClass({
   handleClick: function(evt) {
-    evt.preventDefault();
-    var href = evt.target.href;
-    console.log(href);
   },
   render: function() {
     var html = [];
