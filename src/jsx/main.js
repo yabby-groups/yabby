@@ -1,17 +1,3 @@
-/** @jsx React.DOM */
-
-var React = require('react');
-var is_email = require('./util').is_email;
-
-var file = require('./file');
-var FileForm = file.FileForm;
-var FileItem = file.FileItem;
-var tweet = require('./tweet');
-var TweetForm = tweet.TweetForm;
-var TweetBox = tweet.TweetBox;
-var TweetItem = tweet.TweetItem;
-var TweetList = tweet.TweetList;
-
 var LoginForm = React.createClass({
   handleSubmit: function(e) {
     e.preventDefault();

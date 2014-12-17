@@ -1,7 +1,3 @@
-/** @jsx React.DOM */
-
-var React = require('react');
-
 var FileItem = exports.FileItem = React.createClass({
   render: function() {
     var file = this.props.file || {};

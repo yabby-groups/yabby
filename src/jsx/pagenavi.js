@@ -1,7 +1,3 @@
-/** @jsx React.DOM */
-
-var React = require('react');
-
 var Pagenavi = module.exports = React.createClass({
   handleClick: function(evt) {
     evt.preventDefault();

@@ -1,11 +1,3 @@
-/** @jsx React.DOM */
-
-var React = require('react');
-var Pagenavi = require('./pagenavi');
-var file = require('./file');
-var FileForm = file.FileForm;
-var FileItem = file.FileItem;
-
 var TweetItem = exports.TweetItem = React.createClass({
   getInitialState: function() {
     var tweet = this.props.tweet || {};
