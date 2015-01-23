@@ -9,6 +9,8 @@ fs = require 'fs'
 uuid = require('uuid').v4
 UPYUN = require 'upyun'
 {is_email} = require './util'
+request = require 'request'
+temp = require 'temp'
 
 password_salt = 'IW~#$@Asfk%*(skaADfd3#f@13l!sa9'
 
@@ -73,14 +75,34 @@ class Yabby
 
 
   create_tweet: (tweet, callback) ->
+    self = @
     if not tweet.text or tweet.text.length > 150
       return callback 'Invalid text'
 
-    tweet = new Tweet tweet
-    tweet.save (err, tweet) ->
-      return callback 'Create tweet fail' if err
-      User.findOneAndUpdate {user_id: tweet.user_id}, {$inc: {tweet_count: 1}}, (err, user) ->
-        callback null, tweet
+    async.waterfall [
+      ctx = {}
+      (next) ->
+        if tweet.img_url
+          self.fetchFile tweet.img_url, 'tweet', (err, file) ->
+            return next err if err
+            tweet.file_id = file.file_id
+            ctx.file = file
+            next null, tweet
+        else
+          next null, tweet
+
+      (tweet, next) ->
+        tweet = new Tweet tweet
+        tweet.save next
+      (tweet, next) ->
+        ctx.tweet = tweet
+        User.findOneAndUpdate {user_id: tweet.user_id}, {$inc: {tweet_count: 1}}, next
+    ], (err, user) ->
+      return callback 'create tweet fail' if err
+      tweet = ctx.tweet
+      tweet.user = ctx.user
+      tweet.file = ctx.file
+      callback null, tweet
 
   get_tweet: (tweet_id, callback) ->
     self = @
@@ -393,6 +415,17 @@ class Yabby
       User.findOneAndUpdate {user_id: user_id}, {avatar: JSON.stringify(data)}, (err, user) ->
         return callback 'set avatar fail' if err
         callback null, data
+
+  fetchFile: (imgUrl, bucket, callback) ->
+    self = @
+    file = {}
+    file.path = temp.path
+    flie.hash = crypto.createHash 'sha1'
+    request(imgUrl, (err, rsp) ->
+      file.type = rsp.headers['Content-Type']
+      file.hash = file.hash.digest('hex')
+      self.upload(file, bucket, callback)
+    ).pipe(fs.createWriteStream(file.path)).pipe(file.hash)
 
   save_channel: (channel, callback) ->
     if channel.channel_id
