@@ -1,6 +1,6 @@
 {services, host} = require '../config'
 qs = require 'querystring'
-minreq = require 'minreq'
+request = require 'request'
 {Binding} = require './models'
 redirect_uri = "http://#{host}/oauth/callback/"
 
@@ -86,7 +86,7 @@ module.exports = (app, yabby) ->
         redirect_uri: "#{redirect_uri}douban"
         code: code
       url = 'https://www.douban.com/service/auth2/token'
-    minreq {
+    request {
       uri:url
       method: method
       'content-type': 'application/x-www-form-urlencoded'
@@ -181,7 +181,7 @@ weibo_signin = (token, callback) ->
       access_token: token.access_token
       uid: token.uid
     })
-    minreq url, (err, resp, body) ->
+    request url, (err, resp, body) ->
       return callback err if err
       try
         rsp = JSON.parse body
@@ -233,7 +233,7 @@ weibo_binding = (user, token, callback) ->
       access_token: token.access_token
       uid: token.uid
     })
-    minreq url, (err, resp, body) ->
+    request url, (err, resp, body) ->
       return callback err if err
       try
         rsp = JSON.parse body
