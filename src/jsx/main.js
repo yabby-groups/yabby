@@ -224,10 +224,10 @@ var InfoBox = React.createClass({
     });
   },
   handleLoginClick: function() {
-    React.renderComponent(<PopupBox popupLogin={true} />, document.getElementById('popup'));
+    ReactDOM.render(<PopupBox popupLogin={true} />, document.getElementById('popup'));
   },
   handleRegisterClick: function() {
-    React.renderComponent(<PopupBox popupRegister={true} />, document.getElementById('popup'));
+    ReactDOM.render(<PopupBox popupRegister={true} />, document.getElementById('popup'));
   },
   loadUserInfo: function() {
     var self = this;
@@ -516,14 +516,14 @@ var UserInfo = React.createClass({
 
 
 function render_tweets() {
-  React.renderComponent(
+  ReactDOM.render(
     <TweetBox />,
     document.getElementById("content")
   );
 }
 
 function render_info() {
-  React.renderComponent(
+  ReactDOM.render(
     <InfoBox />,
     document.getElementById("info")
   );
@@ -531,7 +531,7 @@ function render_info() {
 
 
 function render_tweet() {
-  React.renderComponent(
+  ReactDOM.render(
     <OneTweetBox />,
     document.getElementById("content")
   );
@@ -539,7 +539,7 @@ function render_tweet() {
 
 
 function render_new_tweet() {
-  React.renderComponent(
+  ReactDOM.render(
     <div className="newTweetBox">
       <FileForm />
       <TweetForm />
@@ -560,7 +560,7 @@ function render_new_tweet() {
 }
 
 function render_edit_avatar() {
-  React.renderComponent(
+  ReactDOM.render(
     <UserInfo />,
     document.getElementById("content"),
     function() {
@@ -582,12 +582,12 @@ var isLogin = function() {
   if (config.user && config.user.user_id) {
     return true;
   }
-  React.renderComponent(<PopupBox popupLogin={true} />, document.getElementById('popup'));
+  ReactDOM.render(<PopupBox popupLogin={true} />, document.getElementById('popup'));
   return false;
 };
 
 var umountPopup = function(evt) {
-  React.unmountComponentAtNode(document.getElementById('popup'));
+  ReactDOM.unmountComponentAtNode(document.getElementById('popup'));
 };
 
 var notify = function(message, opts, callback) {
@@ -596,12 +596,12 @@ var notify = function(message, opts, callback) {
     opts = {hasOkBtn: true, hasCloseBtn: true};
   }
   opts = opts || {};
-  React.renderComponent(<NotifyBox onOKClick={callback} message={message} hasCloseBtn={opts.hasCloseBtn} hasOkBtn={opts.hasOkBtn} />,
+  ReactDOM.render(<NotifyBox onOKClick={callback} message={message} hasCloseBtn={opts.hasCloseBtn} hasOkBtn={opts.hasOkBtn} />,
       document.getElementById('popup-notify'));
 };
 
 var umountNotify = function(evt) {
-  React.unmountComponentAtNode(document.getElementById('popup-notify'));
+  ReactDOM.unmountComponentAtNode(document.getElementById('popup-notify'));
 };
 
 window.render_tweets = render_tweets;
