@@ -276,7 +276,7 @@ class Yabby
       url = urlparse(req.url)
       token = req.get('Authorization')
       token = if token and token.substr(0, 6) is 'Bearer' then token.substr(7) else false
-      token = req.param('access_token') unless token
+      token = req.params.access_token unless token
       now = new Date()
 
       if req.url.match(/^\/(js|css|img|favicon|logout)$/)
@@ -295,7 +295,7 @@ class Yabby
               next()
       else
         return next() if url.pathname isnt auth_path
-        type = req.param('type')
+        type = req.params.type
         body = req.body or {}
         res.header 'P3P', "CP=\"CURa ADMa DEVa PSAo PSDoOUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP  COR\""
         if type is 'refresh_token'
