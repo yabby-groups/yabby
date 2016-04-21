@@ -28,7 +28,7 @@ app.locals.title = config.title
 app.set 'port', config.port or process.env.PORT or 3000
 app.set 'host', config.host or process.env.HOST or '127.0.0.1'
 app.set 'views', path.join(__dirname, 'views')
-app.set 'view engine', 'jade'
+app.set 'view engine', 'pug'
 app.use favicon(__dirname + '/public/favicon.ico')
 # app.use express.logger('dev')
 app.use bodyParser.urlencoded({ extended: false  })
