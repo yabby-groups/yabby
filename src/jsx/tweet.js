@@ -31,7 +31,7 @@ var TweetItem = exports.TweetItem = React.createClass({
     var self = this;
     if (!isLogin()) {return;}
     notify('确定删除？', function() {
-      $(self.getDOMNode()).hide();
+      $(ReactDOM.findDOMNode(self)).hide();
       $.ajax("/api/tweets/" + self.props.tweet.tweet_id, {method: 'DELETE'}).done(function(data) {});
     });
   },
@@ -121,8 +121,8 @@ var TweetForm = exports.TweetForm = React.createClass({
   handleSubmit: function(e) {
     e.preventDefault();
     if (!isLogin()) {return;}
-    var text = this.refs.text.getDOMNode().value.trim();
-    var file_id = this.refs.file_id.getDOMNode().value.trim();
+    var text = ReactDOM.findDOMNode(this.refs.text).value.trim();
+    var file_id = ReactDOM.findDOMNode(this.refs.file_id).value.trim();
     if (!text) {
       return;
     }
@@ -130,15 +130,15 @@ var TweetForm = exports.TweetForm = React.createClass({
       console.log(data);
       $(".choose-file").text("选择图片");
     });
-    this.refs.text.getDOMNode().value = '';
-    this.refs.file_id.getDOMNode().value = '';
+    ReactDOM.findDOMNode(this.refs.text).value = '';
+    ReactDOM.findDOMNode(this.refs.file_id).value = '';
     return;
   },
   handleFocus: function() {
     $('.tweetForm .placeholder').hide();
   },
   handleBlur: function() {
-    var text = this.refs.text.getDOMNode().value.trim();
+    var text = ReactDOM.findDOMNode(this.refs.text).value.trim();
     if (!text) {
       $('.tweetForm .placeholder').show();
     }

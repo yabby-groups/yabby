@@ -14,11 +14,11 @@ var FileForm = exports.FileForm = React.createClass({
     if (!isLogin()) {return;}
     $(".choose-file").text("正在上传");
     notify('正在上传图片...')
-    $(this.refs.fileForm.getDOMNode()).submit();
+    $(ReactDOM.findDOMNode(this.refs.fileForm)).submit();
   },
   handleClick: function() {
     if (!isLogin()) {return;}
-    $(this.refs.file.getDOMNode()).click();
+    $(ReactDOM.findDOMNode(this.refs.file)).click();
   },
   render: function() {
     var action = this.props.action || "/api/upload"

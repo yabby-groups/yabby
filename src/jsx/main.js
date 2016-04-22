@@ -1,8 +1,8 @@
 var LoginForm = React.createClass({
   handleSubmit: function(e) {
     e.preventDefault();
-    var username = this.refs.username.getDOMNode().value.trim();
-    var passwd = this.refs.passwd.getDOMNode().value.trim();
+    var username = ReactDOM.findDOMNode(this.refs.username).value.trim();
+    var passwd = ReactDOM.findDOMNode(this.refs.passwd).value.trim();
     if (!username) {
       notify('请输入用户名/邮箱', {hasCloseBtn: true, hasOkBtn: true});
       return;
@@ -63,10 +63,10 @@ var PopupLogin = React.createClass({
 var RegisterForm = React.createClass({
   handleSubmit: function(e) {
     e.preventDefault();
-    var username = this.refs.username.getDOMNode().value.trim();
-    var email = this.refs.email.getDOMNode().value.trim();
-    var passwd = this.refs.passwd.getDOMNode().value.trim();
-    var repasswd = this.refs.repasswd.getDOMNode().value.trim();
+    var username = ReactDOM.findDOMNode(this.refs.username).value.trim();
+    var email = ReactDOM.findDOMNode(this.refs.email).value.trim();
+    var passwd = ReactDOM.findDOMNode(this.refs.passwd).value.trim();
+    var repasswd = ReactDOM.findDOMNode(this.refs.repasswd).value.trim();
     if (!username) {
       notify('请输入用户名', {hasCloseBtn: true, hasOkBtn: true});
       return
@@ -356,19 +356,19 @@ var CommentItem = React.createClass({
 var CommentForm = React.createClass({
   handleSubmit: function(e) {
     e.preventDefault();
-    var text = this.refs.text.getDOMNode().value.trim();
+    var text = ReactDOM.findDOMNode(this.refs.text).value.trim();
     if (!text) {
       return;
     }
     this.props.onCommentSubmit({text: text});
-    this.refs.text.getDOMNode().value = '';
+    ReactDOM.findDOMNode(this.refs.text).value = '';
     return;
   },
   handleFocus: function() {
     $('.commentForm .placeholder').hide();
   },
   handleBlur: function() {
-    var text = this.refs.text.getDOMNode().value.trim();
+    var text = ReactDOM.findDOMNode(this.refs.text).value.trim();
     if (!text) {
       $('.commentForm .placeholder').show();
     }
@@ -437,9 +437,9 @@ var CommentBox = React.createClass({
 var UserInfo = React.createClass({
   handleSave: function(e) {
     e.preventDefault();
-    var passwd = this.refs.passwd.getDOMNode().value.trim();
-    var oldpasswd = this.refs.oldpasswd.getDOMNode().value.trim();
-    var repasswd = this.refs.repasswd.getDOMNode().value.trim();
+    var passwd = ReactDOM.findDOMNode(this.refs.passwd).value.trim();
+    var oldpasswd = ReactDOM.findDOMNode(this.refs.oldpasswd).value.trim();
+    var repasswd = ReactDOM.findDOMNode(this.refs.repasswd).value.trim();
     if (!oldpasswd) {
       notify('请输入旧密码', {hasCloseBtn: true, hasOkBtn: true});
       return
@@ -461,9 +461,9 @@ var UserInfo = React.createClass({
         notify(data.msg, {hasCloseBtn: true, hasOkBtn: true});
       } else {
         notify('修改成功', {hasCloseBtn: true, hasOkBtn: true});
-        this.refs.passwd.getDOMNode().value = '';
-        this.refs.repasswd.getDOMNode().value = '';
-        this.refs.oldpasswd.getDOMNode().value = '';
+        ReactDOM.findDOMNode(this.refs.passwd).value = '';
+        ReactDOM.findDOMNode(this.refs.repasswd).value = '';
+        ReactDOM.findDOMNode(this.refs.oldpasswd).value = '';
       }
     });
     return;
@@ -472,9 +472,9 @@ var UserInfo = React.createClass({
     e.preventDefault();
     var self = this;
     notify('确定取消', function () {
-      self.refs.passwd.getDOMNode().value = '';
-      self.refs.repasswd.getDOMNode().value = '';
-      self.refs.oldpasswd.getDOMNode().value = '';
+      ReactDOM.findDOMNode(self.refs.passwd).value = '';
+      ReactDOM.findDOMNode(self.refs.repasswd).value = '';
+      ReactDOM.findDOMNode(self.refs.oldpasswd).value = '';
     });
   },
   render: function() {
