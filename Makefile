@@ -1,9 +1,9 @@
 BIN=node_modules/.bin
 BABEL=$(BIN)/babel --presets=react
 CAKE=$(BIN)/cake
-UGLIFYJS=$(BIN)/uglifyjs -m -r
+UGLIFYJS=NODE_ENV=production $(BIN)/uglifyjs -m -r
 LESSC=$(BIN)/lessc
-BROWSERIFY=$(BIN)/browserify
+BROWSERIFY=NODE_ENV=production $(BIN)/browserify
 COMBINED=combine.js
 
 JSX_SOURCE=src/jsx/header.js src/jsx/util.js src/jsx/file.js src/jsx/tweet.js \
