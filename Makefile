@@ -1,17 +1,22 @@
-BABEL=node_modules/.bin/babel --presets=react
+BIN=node_modules/.bin
+BABEL=$(BIN)/babel --presets=react
+CAKE=$(BIN)/cake
+UGLIFYJS=$(BIN)/uglifyjs -m -r
+LESSC=$(BIN)/lessc
+
 JSX_SOURCE=src/jsx/header.js src/jsx/util.js src/jsx/file.js src/jsx/tweet.js \
 					 src/jsx/pagenavi.js src/jsx/main.js
 
 all: public/static/js/main.js public/static/style.css
-	@cake build
+	@$(CAKE) build
 
 public/static/js/main.js: src/jsx/main.js
 	cat $(JSX_SOURCE) > comibed.js
-	$(BABEL) comibed.js | uglifyjs -m -r '$$' > $@
+	$(BABEL) comibed.js | $(UGLIFYJS) '$$' > $@
 
 public/static/style.css: src/less/style.less
-	lessc $^ > $@
+	$(LESSC) $^ > $@
 
 clean:
 	rm -f public/static/js/main.js public/static/style.css
-	@cake clean
+	@$(CAKE) clean
